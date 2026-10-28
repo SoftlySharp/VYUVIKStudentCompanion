@@ -77,12 +77,12 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
     if (type === 'cold_email') {
       setDraftContent(
         matchResult?.tailoredColdEmail ||
-          `Subject: Application: ${selectedOpp?.role || 'SDE Intern'} - Aarav Sharma (DTU CSE)\n\nHi ${selectedOpp?.company || 'Hiring'} Team,\n\nI am writing to express my strong interest in the ${selectedOpp?.role || 'Software Engineering Intern'} role at ${selectedOpp?.company || 'your team'}. As a pre-final year Computer Science student at Delhi Technological University, I specialize in full-stack web architectures (React 19, TypeScript, Node.js) and distributed backend systems (Raft protocol in Go).\n\nRecently, I architected VYUVIK, an intelligent academic system handling complex state synchronization and document intelligence pipelines. I would love to bring this level of rigour to your engineering team.\n\nMy resume and GitHub are attached. Could we schedule a 10-minute introductory call this week?\n\nBest regards,\nAarav Sharma\n+91 98765 43210 | aarav@dtu.ac.in`
+          `Subject: Application: ${selectedOpp?.role || 'SDE Intern'} - Khushi (SAREC Mirzapur CSE)\n\nHi ${selectedOpp?.company || 'Hiring'} Team,\n\nI am writing to express my strong interest in the ${selectedOpp?.role || 'Software Engineering Intern'} role at ${selectedOpp?.company || 'your team'}. As a pre-final year Computer Science student at Samrat Ashok Rajkiya Engineering College Mirzapur, I specialize in full-stack web architectures (React 19, TypeScript, Node.js) and distributed backend systems (Raft protocol in Go).\n\nRecently, I architected VYUVIK, an intelligent academic system handling complex state synchronization and document intelligence pipelines. I would love to bring this level of rigour to your engineering team.\n\nMy resume and GitHub are attached. Could we schedule a 10-minute introductory call this week?\n\nBest regards,\nKhushi\n+91 98765 43210 | khushi@sarecmirzapur.ac.in`
       );
     } else {
       setDraftContent(
         matchResult?.customCoverLetter ||
-          `Dear Hiring Team at ${selectedOpp?.company || 'the organization'},\n\nI am thrilled to apply for the ${selectedOpp?.role || 'Software Development Engineer Intern'} position. With hands-on engineering experience in building full-stack web applications and robust distributed systems, I bring a solid foundation in React, TypeScript, Go, and relational database design.\n\nThank you for considering my candidacy. I look forward to the possibility of discussing how my skills align with your upcoming goals.\n\nSincerely,\nAarav Sharma`
+          `Dear Hiring Team at ${selectedOpp?.company || 'the organization'},\n\nI am thrilled to apply for the ${selectedOpp?.role || 'Software Development Engineer Intern'} position. With hands-on engineering experience in building full-stack web applications and robust distributed systems, I bring a solid foundation in React, TypeScript, Go, and relational database design.\n\nThank you for considering my candidacy. I look forward to the possibility of discussing how my skills align with your upcoming goals.\n\nSincerely,\nKhushi`
       );
     }
     setShowApprovalModal(true);
@@ -500,7 +500,7 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
 
             <div className="p-3 bg-[#FAFAFC] rounded-xl border border-[#E8E8EF] text-[11px] text-[#53566B]">
               <span className="font-bold text-[#18856B]">Verified Profile Signals: </span>
-              DTU CSE, CGPA 8.62, React 19 / TypeScript, Raft Protocol (Go), VYUVIK OS.
+              SAREC Mirzapur CSE, CGPA 8.62, React 19 / TypeScript, Raft Protocol (Go), VYUVIK OS.
             </div>
 
             <div className="flex items-center justify-between pt-2 border-t border-[#E8E8EF] text-xs">

@@ -78,7 +78,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="e.g. Aarav Sharma"
+                placeholder="e.g. Khushi"
                 className="w-full mt-1 p-2.5 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-[#171827]"
               />
             </div>
@@ -90,7 +90,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
                 required
                 value={form.college}
                 onChange={(e) => setForm({ ...form, college: e.target.value })}
-                placeholder="e.g. Delhi Technological University"
+                placeholder="e.g. Samrat Ashok Rajkiya Engineering College Mirzapur"
                 className="w-full mt-1 p-2.5 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-[#171827]"
               />
             </div>

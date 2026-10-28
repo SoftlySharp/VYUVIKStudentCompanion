@@ -239,7 +239,7 @@ export const FocusZoneView: React.FC = () => {
 
         {/* HUD Overlay */}
         <div className="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#E8E8EF] text-xs pointer-events-none">
-          <p className="font-bold text-[#171827]">DTU Campus Knowledge Pavilion</p>
+          <p className="font-bold text-[#171827]">SAREC Mirzapur Campus Knowledge Pavilion</p>
           <p className="text-[10px] text-[#717487]">Procedural PBR Lighting • ACES Tone Mapping</p>
         </div>
 

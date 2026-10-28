@@ -68,7 +68,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
 
   const handleDemoLogin = async () => {
     setIsSubmitting(true);
-    await login('aarav.sharma@college.edu.in', 'demo123');
+    await login('khushi@sarecmirzapur.ac.in', 'demo123');
     onSuccess('/dashboard');
   };
 
@@ -132,7 +132,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
           className="w-full py-2.5 bg-[#F0EEFF] hover:bg-[#E2DEFD] text-[#7065E8] border border-[#D9D4FA] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-2xs"
         >
           <Sparkles className="w-4 h-4" />
-          <span>Continue as Demo Student (Aarav Sharma - DTU)</span>
+          <span>Continue as Demo Student (Khushi - SAREC Mirzapur)</span>
         </button>
 
         <div className="relative text-center">

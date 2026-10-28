@@ -52,14 +52,14 @@ interface StudentContextType {
 }
 
 const INITIAL_PROFILE: StudentProfile = {
-  name: 'Aarav Sharma',
-  email: 'aarav.sharma@college.edu.in',
-  college: 'Delhi Technological University (DTU)',
+  name: 'Khushi',
+  email: 'khushi@sarecmirzapur.ac.in',
+  college: 'Samrat Ashok Rajkiya Engineering College Mirzapur',
   degree: 'B.Tech',
   branch: 'Computer Science & Engineering',
   semester: 'Semester 5',
-  rollNumber: '2K23/CO/142',
-  academicGoals: 'Maintain >8.5 CGPA, secure Product Intern role, complete Capstone project',
+  rollNumber: '2K23/CSE/042',
+  academicGoals: 'Maintain >8.5 CGPA, secure SDE Intern role, complete Capstone project',
   preferredStudyHours: '6:00 PM - 10:30 PM',
   timeZone: 'Asia/Kolkata (IST)',
   isOnboarded: true,
@@ -195,12 +195,12 @@ const INITIAL_DOCS: DocumentItem[] = [
     uploadDate: '2026-08-01',
     fileSize: '1.2 MB',
     fileType: 'PDF',
-    extractedMeta: { StudentName: 'Aarav Sharma', RollNumber: '2K23/CO/142', ValidTill: 'June 2027', BloodGroup: 'O+' },
+    extractedMeta: { StudentName: 'Khushi', RollNumber: '2K23/CSE/042', ValidTill: 'June 2027', BloodGroup: 'O+' },
     isVerified: true,
   },
   {
     id: 'doc-3',
-    title: 'Aarav_Sharma_SDE_Resume_2026.pdf',
+    title: 'Khushi_SDE_Resume_2026.pdf',
     category: 'resume',
     uploadDate: '2026-10-15',
     fileSize: '185 KB',
@@ -263,7 +263,7 @@ const INITIAL_INTERNSHIPS: InternshipOpp[] = [
 ];
 
 const INITIAL_EXPENSES: ExpenseItem[] = [
-  { id: 'exp-1', title: 'DTU Canteen Lunch (Thali + Chai)', amount: 120, category: 'Food', date: '2026-10-27', merchant: 'Central Canteen' },
+  { id: 'exp-1', title: 'SAREC Canteen Lunch (Thali + Chai)', amount: 120, category: 'Food', date: '2026-10-27', merchant: 'Central Canteen' },
   { id: 'exp-2', title: 'Lab Record Binding & Printing', amount: 160, category: 'Printing', date: '2026-10-26', merchant: 'Micron Xerox' },
   { id: 'exp-3', title: 'Delhi Metro Smart Card Recharge', amount: 500, category: 'Transport', date: '2026-10-25', merchant: 'DMRC Samaypur Badli' },
   { id: 'exp-4', title: 'Algorithms Textbook Reference Book', amount: 480, category: 'Education', date: '2026-10-22', merchant: 'Nai Sarak Books' },
@@ -341,6 +341,32 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return localStorage.getItem('vyuvik_auth') !== 'false';
   });
+
+  // Rehydrate state from backend storage on mount if available
+  useEffect(() => {
+    const loadServerState = async () => {
+      try {
+        const res = await fetch('/api/student/state');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) {
+            if (json.data.profile) setProfile(json.data.profile);
+            if (json.data.assignments) setAssignments(json.data.assignments);
+            if (json.data.notices) setNotices(json.data.notices);
+            if (json.data.documents) setDocuments(json.data.documents);
+            if (json.data.internships) setInternships(json.data.internships);
+            if (json.data.expenses) setExpenses(json.data.expenses);
+            if (json.data.attendanceList) setAttendanceList(json.data.attendanceList);
+            if (json.data.studyBlocks) setStudyBlocks(json.data.studyBlocks);
+            if (json.data.notifications) setNotifications(json.data.notifications);
+          }
+        }
+      } catch (e) {
+        console.warn('Initial server state load:', e);
+      }
+    };
+    loadServerState();
+  }, []);
 
   const syncWithServer = async () => {
     try {

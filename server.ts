@@ -281,16 +281,16 @@ app.post('/api/documents/process', async (req, res) => {
       defaultPayload = {
         docTitle: fileName ? fileName.replace(/\.[^/.]+$/, '').replace(/_/g, ' ') : 'Verified Student Document',
         docType: 'Academic Certificate / Mark Sheet',
-        issuingOrganization: 'Delhi Technological University',
+        issuingOrganization: 'Samrat Ashok Rajkiya Engineering College Mirzapur',
         relevantDates: ['2026-10-26'],
         identifiedFields: [
-          { label: 'Student Name', suggestedValue: 'Aarav Sharma', isSensitive: false },
-          { label: 'Roll Number', suggestedValue: '2K23/CO/142', isSensitive: true },
+          { label: 'Student Name', suggestedValue: 'Khushi', isSensitive: false },
+          { label: 'Roll Number', suggestedValue: '2K23/CSE/042', isSensitive: true },
           { label: 'Term / Semester', suggestedValue: 'Semester 5', isSensitive: false },
         ],
         summary: 'Extracted and verified student credential from private document vault.',
         sourceReferences: [
-          { pageNumber: 1, sourceQuote: 'Roll No: 2K23/CO/142 Name: Aarav Sharma', confidence: 0.97 },
+          { pageNumber: 1, sourceQuote: 'Roll No: 2K23/CSE/042 Name: Khushi', confidence: 0.97 },
         ],
       };
     }
@@ -754,7 +754,7 @@ app.post('/api/gemini/internship-match', async (req, res) => {
             impact: 'Showcases performance optimization and API reliability practices.',
           },
         ],
-        tailoredColdEmail: `Subject: Application: ${role || 'Software Engineering Intern'} - Aarav Sharma (DTU CSE)\n\nHi ${company || 'Engineering'} Team,\n\nI came across your open ${role || 'Internship'} opening and wanted to reach out. I'm a pre-final year CS student at Delhi Technological University with strong hands-on experience in React 19, TypeScript, Node.js, and distributed systems.\n\nRecently, I built VYUVIK (a full-stack academic OS with deterministic scheduling and document intelligence) and implemented a Raft consensus engine in Go. Given your emphasis on performance and clean architecture, I'd love to contribute to your engineering milestones this semester.\n\nMy resume and GitHub are attached. Would you be open to a 10-minute chat this week?\n\nBest regards,\nAarav Sharma\n+91 98765 43210 | aarav@dtu.ac.in`,
+        tailoredColdEmail: `Subject: Application: ${role || 'Software Engineering Intern'} - Khushi (SAREC Mirzapur CSE)\n\nHi ${company || 'Engineering'} Team,\n\nI came across your open ${role || 'Internship'} opening and wanted to reach out. I'm a pre-final year CS student at Samrat Ashok Rajkiya Engineering College Mirzapur with strong hands-on experience in React 19, TypeScript, Node.js, and distributed systems.\n\nRecently, I built VYUVIK (a full-stack academic OS with deterministic scheduling and document intelligence) and implemented a Raft consensus engine in Go. Given your emphasis on performance and clean architecture, I'd love to contribute to your engineering milestones this semester.\n\nMy resume and GitHub are attached. Would you be open to a 10-minute chat this week?\n\nBest regards,\nKhushi\n+91 98765 43210 | khushi@sarecmirzapur.ac.in`,
         customCoverLetter: `Dear Hiring Team at ${company || 'the organization'},\n\nI am writing to express my eager interest in the ${role || 'Software Engineering Intern'} position. With hands-on experience developing production-grade web applications in React, TypeScript, and Node.js, I bridge modern frontend ergonomics with robust backend services.\n\nMy recent projects include building intelligent student workflow tools with automated document processing and deterministic scheduling engines. I admire your team's engineering standards and would love to contribute to your upcoming product milestones.\n\nThank you for considering my application.\n\nWarm regards,\nStudent Applicant`,
         interviewQuestions: [
           'How do you handle state synchronization across multiple independent modules in React?',
