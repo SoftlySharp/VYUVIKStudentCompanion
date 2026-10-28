@@ -13,8 +13,12 @@ import {
   Loader2,
   ChevronDown,
   ChevronRight,
+  Plus,
+  Trash2,
+  Calendar,
 } from 'lucide-react';
-
+import { useStudent } from '../context/StudentContext';
+import { calculateTopicFrequencies } from '../utils/rules';
 import {
   SharedDocumentProcessor,
   ProcessedDocumentResult,
@@ -29,12 +33,6 @@ interface ExtractedQuestion {
   frequency: string;
 }
 
-interface TopicFrequency {
-  topic: string;
-  count: number;
-  weight: string;
-}
-
 interface QuizQuestion {
   question: string;
   options: string[];
@@ -43,20 +41,22 @@ interface QuizQuestion {
 }
 
 export const PreviousPapersView: React.FC = () => {
+  const { setStudyBlocks } = useStudent();
   const [selectedSubject, setSelectedSubject] = useState('Computer Networks');
   const [selectedYear, setSelectedYear] = useState('2025');
   const [examType, setExamType] = useState('End-Semester Examination');
   const [rawPaperText, setRawPaperText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showSharedProcessor, setShowSharedProcessor] = useState(false);
+  const [showAddQuestionModal, setShowAddQuestionModal] = useState(false);
+  const [plannerNotification, setPlannerNotification] = useState<string | null>(null);
 
   // Extracted paper state
   const [extractedData, setExtractedData] = useState<{
     paperTitle: string;
     extractedQuestions: ExtractedQuestion[];
-    topicFrequency: TopicFrequency[];
     practiceQuiz: QuizQuestion[];
-  } | null>({
+  }>({
     paperTitle: 'Computer Networks End-Semester Exam (May-June 2025)',
     extractedQuestions: [
       { number: 'Q1(a)', text: 'Explain the OSI 7-layer reference model with suitable diagrams and functions of each layer.', marks: 10, unit: 'Unit 1: Architecture', topic: 'OSI Model', frequency: 'Observed 5 times in last 5 years' },
@@ -65,14 +65,6 @@ export const PreviousPapersView: React.FC = () => {
       { number: 'Q2(b)', text: 'Explain CIDR, subnetting and supernetting with IPv4 address classes.', marks: 6, unit: 'Unit 2: IP Addressing', topic: 'Subnetting & CIDR', frequency: 'Observed 3 times' },
       { number: 'Q3(a)', text: 'Explain TCP 3-way handshake connection establishment and TCP Congestion Control (Tahoe/Reno).', marks: 10, unit: 'Unit 3: Transport Layer', topic: 'TCP Handshake & Congestion', frequency: 'Observed 4 times' },
       { number: 'Q4(a)', text: 'Explain DNS recursive vs iterative query resolution and HTTP 1.1 vs HTTP/2 multiplexing.', marks: 8, unit: 'Unit 4: Application Layer', topic: 'DNS & HTTP Protocol', frequency: 'Observed 3 times' },
-    ],
-    topicFrequency: [
-      { topic: 'OSI 7-Layer Reference Model', count: 5, weight: '22%' },
-      { topic: 'Dijkstra & Distance Vector Routing', count: 4, weight: '18%' },
-      { topic: 'TCP 3-Way Handshake & Congestion', count: 4, weight: '18%' },
-      { topic: 'Sliding Window ARQ (GBN vs SR)', count: 3, weight: '14%' },
-      { topic: 'IPv4 Subnetting & CIDR Masks', count: 3, weight: '14%' },
-      { topic: 'DNS & Application Protocols', count: 3, weight: '14%' },
     ],
     practiceQuiz: [
       {
@@ -89,6 +81,9 @@ export const PreviousPapersView: React.FC = () => {
       },
     ],
   });
+
+  // Calculate dynamic, mathematically deterministic topic frequencies directly from extracted questions
+  const computedFrequencies = calculateTopicFrequencies(extractedData.extractedQuestions);
 
   const [activeTab, setActiveTab] = useState<'questions' | 'frequency' | 'quiz'>('questions');
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
@@ -107,7 +102,11 @@ export const PreviousPapersView: React.FC = () => {
         }),
       });
       const data = await res.json();
-      setExtractedData(data);
+      setExtractedData({
+        paperTitle: data.paperTitle || `${selectedSubject} Exam ${selectedYear}`,
+        extractedQuestions: data.extractedQuestions || [],
+        practiceQuiz: data.practiceQuiz || [],
+      });
     } catch (e) {
       console.error(e);
     } finally {
@@ -117,17 +116,59 @@ export const PreviousPapersView: React.FC = () => {
 
   const handlePaperExtracted = (result: ProcessedDocumentResult) => {
     const d = result.data;
-    if (d.extractedQuestions || d.practiceQuiz || d.topicFrequency) {
+    if (d.extractedQuestions || d.practiceQuiz) {
       setExtractedData({
         paperTitle: d.paperTitle || result.fileName,
         extractedQuestions: d.extractedQuestions || [],
-        topicFrequency: d.topicFrequency || [],
         practiceQuiz: d.practiceQuiz || [],
       });
       if (result.fileName) {
         setRawPaperText(`Extracted questions from ${result.fileName}`);
       }
     }
+  };
+
+  const handleAddQuestion = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const number = (form.elements.namedItem('number') as HTMLInputElement).value;
+    const text = (form.elements.namedItem('text') as HTMLTextAreaElement).value;
+    const marks = Number((form.elements.namedItem('marks') as HTMLInputElement).value) || 10;
+    const unit = (form.elements.namedItem('unit') as HTMLInputElement).value;
+    const topic = (form.elements.namedItem('topic') as HTMLInputElement).value;
+
+    const newQ: ExtractedQuestion = {
+      number: number || `Q${extractedData.extractedQuestions.length + 1}`,
+      text,
+      marks,
+      unit: unit || 'General Unit',
+      topic: topic || 'Core Topic',
+      frequency: 'Observed in active paper',
+    };
+
+    setExtractedData((prev) => ({
+      ...prev,
+      extractedQuestions: [newQ, ...prev.extractedQuestions],
+    }));
+
+    setShowAddQuestionModal(false);
+  };
+
+  const handleScheduleHighYieldRevision = (topic: string) => {
+    const newBlock = {
+      id: `sb-rev-${Date.now()}`,
+      title: `High-Yield PYQ Revision: ${topic}`,
+      subject: selectedSubject,
+      startTime: '8:00 PM',
+      endTime: '9:30 PM',
+      durationMinutes: 90,
+      priority: 'high' as const,
+      completed: false,
+      day: 'Today',
+    };
+    setStudyBlocks((prev) => [...prev, newBlock]);
+    setPlannerNotification(`Created 90-minute study session for "${topic}" in your Planner!`);
+    setTimeout(() => setPlannerNotification(null), 3500);
   };
 
   const handleSelectQuizAnswer = (qIndex: number, optionIndex: number) => {
@@ -231,11 +272,45 @@ export const PreviousPapersView: React.FC = () => {
         </div>
       </div>
 
-      {/* Analysis Workspace Tabs */}
+
+
+      {/* Planner Notification Banner */}
+      {plannerNotification && (
+        <div className="p-3 bg-[#EAF7F3] border border-[#A7E3D3] rounded-2xl flex items-center justify-between text-xs text-[#136652] shadow-2xs animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#18856B]" />
+            <span className="font-semibold">{plannerNotification}</span>
+          </div>
+          <span className="font-bold text-[#18856B]">Synced to Planner</span>
+        </div>
+      )}
+
+      {/* Extracted Intelligence Results Card */}
       {extractedData && (
         <div className="space-y-4">
-          {/* Tab Navigation */}
-          <div className="flex items-center gap-2 border-b border-[#E8E8EF] pb-2 text-xs font-semibold">
+          {/* Paper Title Banner */}
+          <div className="bg-white rounded-2xl border border-[#E8E8EF] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#7065E8] bg-[#F0EEFF] px-2.5 py-0.5 rounded-full">
+                Extracted Syllabus & Question Intelligence
+              </span>
+              <h2 className="text-base sm:text-lg font-bold text-[#171827] mt-1">
+                {extractedData.paperTitle}
+              </h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowAddQuestionModal(true)}
+                className="bg-[#FAFAFC] hover:bg-[#F0EEFF] text-[#7065E8] border border-[#E8E8EF] px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add Question</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="flex items-center gap-2 border-b border-[#E8E8EF] pb-2 text-xs font-semibold overflow-x-auto">
             <button
               onClick={() => setActiveTab('questions')}
               className={`px-3 py-1.5 rounded-xl transition-colors ${
@@ -254,7 +329,7 @@ export const PreviousPapersView: React.FC = () => {
                   : 'text-[#717487] hover:text-[#171827]'
               }`}
             >
-              Topic Frequency & Unit Breakdown
+              Deterministic Topic Frequencies ({computedFrequencies.length})
             </button>
             <button
               onClick={() => setActiveTab('quiz')}
@@ -286,9 +361,23 @@ export const PreviousPapersView: React.FC = () => {
                       </span>
                       <span className="text-xs text-[#717487]">• {q.topic}</span>
                     </div>
-                    <span className="text-xs font-bold text-[#18856B] bg-[#EAF7F3] px-2 py-0.5 rounded-md">
-                      {q.marks} Marks
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-[#18856B] bg-[#EAF7F3] px-2 py-0.5 rounded-md">
+                        {q.marks} Marks
+                      </span>
+                      <button
+                        onClick={() =>
+                          setExtractedData((prev) => ({
+                            ...prev,
+                            extractedQuestions: prev.extractedQuestions.filter((_, i) => i !== idx),
+                          }))
+                        }
+                        className="text-[#8C8FA3] hover:text-[#C64545] p-1 rounded-md"
+                        title="Delete question"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <p className="text-xs sm:text-sm text-[#171827] leading-relaxed font-medium">
@@ -309,32 +398,66 @@ export const PreviousPapersView: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 2: Frequency & Unit Distribution */}
+          {/* TAB 2: Frequency & Unit Distribution (100% Deterministic derived from questions) */}
           {activeTab === 'frequency' && (
             <div className="bg-white rounded-2xl border border-[#E8E8EF] p-5 shadow-2xs space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-[#171827]">Observed Topic Frequency</h3>
+                  <h3 className="text-sm font-bold text-[#171827]">
+                    Calculated Topic Frequencies & Weightings
+                  </h3>
                   <p className="text-xs text-[#717487]">
-                    Calculated from historical 5-year question paper datasets.
+                    Mathematically derived from {extractedData.extractedQuestions.length} extracted questions ({extractedData.extractedQuestions.reduce((s, q) => s + (q.marks || 8), 0)} total marks).
                   </p>
                 </div>
-                <span className="text-xs bg-[#F0EEFF] text-[#7065E8] font-bold px-2 py-1 rounded-lg">
+                <span className="text-xs bg-[#F0EEFF] text-[#7065E8] font-bold px-2.5 py-1 rounded-lg">
                   {selectedSubject}
                 </span>
               </div>
 
               <div className="space-y-3">
-                {extractedData.topicFrequency.map((item, idx) => (
-                  <div key={idx} className="p-3 bg-[#FAFAFC] rounded-xl border border-[#E8E8EF]">
-                    <div className="flex items-center justify-between text-xs font-semibold text-[#171827] mb-1.5">
-                      <span>{item.topic}</span>
-                      <span className="text-[#7065E8] font-bold">{item.count} papers ({item.weight})</span>
+                {computedFrequencies.map((item, idx) => (
+                  <div key={idx} className="p-3.5 bg-[#FAFAFC] rounded-xl border border-[#E8E8EF] space-y-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-[#171827]">{item.topic}</span>
+                          <span
+                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                              item.frequencyTier === 'High Yield'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : item.frequencyTier === 'Important'
+                                ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                                : 'bg-gray-100 text-gray-700'
+                            }`}
+                          >
+                            {item.frequencyTier}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#717487] mt-0.5">
+                          Questions: {item.questionNumbers.join(', ')} • {item.totalMarks} marks total ({item.count} questions)
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                        <span className="text-[#7065E8] font-bold">{item.weightLabel} of paper</span>
+                        <button
+                          onClick={() => handleScheduleHighYieldRevision(item.topic)}
+                          className="px-2.5 py-1 bg-white hover:bg-[#F0EEFF] text-[#7065E8] border border-[#E8E8EF] rounded-lg text-[11px] font-semibold flex items-center gap-1 transition-colors"
+                          title="Schedule targeted 90-min study block in Assignment Planner"
+                        >
+                          <Calendar className="w-3 h-3" />
+                          <span>Add to Planner</span>
+                        </button>
+                      </div>
                     </div>
+
                     <div className="w-full bg-[#E8E8EF] h-2 rounded-full overflow-hidden">
                       <div
-                        className="bg-[#7065E8] h-full rounded-full"
-                        style={{ width: item.weight }}
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          item.frequencyTier === 'High Yield' ? 'bg-[#7065E8]' : 'bg-[#988EFA]'
+                        }`}
+                        style={{ width: `${item.weightPercent}%` }}
                       />
                     </div>
                   </div>
@@ -343,7 +466,7 @@ export const PreviousPapersView: React.FC = () => {
 
               {/* Provenance disclaimer */}
               <div className="p-3 bg-[#FAFAFC] rounded-xl border border-[#E8E8EF] text-[11px] text-[#717487] leading-relaxed">
-                <strong>Provenance Guarantee: </strong> Frequency data represents observed appearances in past university papers and does not promise or guarantee upcoming exam questions. Always study all syllabus units thoroughly.
+                <strong>Deterministic Aggregation: </strong> Topic weightings are computed directly by summing marks across extracted questions and dividing by total paper marks. No arbitrary guessing or synthetic percentages.
               </div>
             </div>
           )}
@@ -406,6 +529,101 @@ export const PreviousPapersView: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Add Custom Question Modal */}
+      {showAddQuestionModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-[#E8E8EF] max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#E8E8EF] pb-3">
+              <h3 className="text-sm font-bold text-[#171827]">Add Question to Paper Dataset</h3>
+              <button
+                onClick={() => setShowAddQuestionModal(false)}
+                className="text-[#717487] hover:text-[#171827]"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleAddQuestion} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-[#171827]">Question Number</label>
+                  <input
+                    type="text"
+                    name="number"
+                    defaultValue={`Q${extractedData.extractedQuestions.length + 1}`}
+                    required
+                    className="w-full mt-1 p-2 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-[#171827]"
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold text-[#171827]">Marks</label>
+                  <input
+                    type="number"
+                    name="marks"
+                    defaultValue={10}
+                    min={1}
+                    max={25}
+                    required
+                    className="w-full mt-1 p-2 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-[#171827]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-semibold text-[#171827]">Syllabus Unit</label>
+                <input
+                  type="text"
+                  name="unit"
+                  placeholder="e.g. Unit 2: Network Layer"
+                  defaultValue="Unit 2: Network Layer"
+                  required
+                  className="w-full mt-1 p-2 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-[#171827]"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-[#171827]">Core Topic Name</label>
+                <input
+                  type="text"
+                  name="topic"
+                  placeholder="e.g. Shortest Path Routing"
+                  defaultValue="Shortest Path Routing"
+                  required
+                  className="w-full mt-1 p-2 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-[#171827]"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-[#171827]">Question Text</label>
+                <textarea
+                  name="text"
+                  rows={3}
+                  required
+                  placeholder="Enter full exam question problem statement..."
+                  className="w-full mt-1 p-2 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-[#171827]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E8E8EF]">
+                <button
+                  type="button"
+                  onClick={() => setShowAddQuestionModal(false)}
+                  className="px-3.5 py-1.5 border border-[#E8E8EF] rounded-xl text-[#717487] font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 bg-[#7065E8] hover:bg-[#5E52E2] text-white rounded-xl font-semibold shadow-xs"
+                >
+                  Add & Recalculate Frequencies
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 

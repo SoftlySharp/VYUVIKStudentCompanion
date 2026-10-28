@@ -167,6 +167,8 @@ export const AssistantView: React.FC = () => {
       setStudyBlocks((prev) => [...prev, action.payload]);
     } else if (action.type === 'record_expense') {
       addExpense(action.payload);
+    } else if (action.type === 'create_assignment') {
+      addAssignment(action.payload);
     }
 
     setMessages((prev) =>

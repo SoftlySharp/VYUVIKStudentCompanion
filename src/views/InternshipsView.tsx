@@ -32,6 +32,13 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
   const [isMatching, setIsMatching] = useState(false);
   const [matchResult, setMatchResult] = useState<any>(null);
 
+  // Review & Approval draft state
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [draftType, setDraftType] = useState<'cold_email' | 'cover_letter'>('cold_email');
+  const [draftContent, setDraftContent] = useState('');
+  const [copiedDraft, setCopiedDraft] = useState(false);
+  const [approvalMessage, setApprovalMessage] = useState<string | null>(null);
+
   const statuses: InternshipOpp['status'][] = [
     'interested',
     'preparing',
@@ -63,6 +70,32 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
     } finally {
       setIsMatching(false);
     }
+  };
+
+  const handleOpenDraftForApproval = (type: 'cold_email' | 'cover_letter') => {
+    setDraftType(type);
+    if (type === 'cold_email') {
+      setDraftContent(
+        matchResult?.tailoredColdEmail ||
+          `Subject: Application: ${selectedOpp?.role || 'SDE Intern'} - Aarav Sharma (DTU CSE)\n\nHi ${selectedOpp?.company || 'Hiring'} Team,\n\nI am writing to express my strong interest in the ${selectedOpp?.role || 'Software Engineering Intern'} role at ${selectedOpp?.company || 'your team'}. As a pre-final year Computer Science student at Delhi Technological University, I specialize in full-stack web architectures (React 19, TypeScript, Node.js) and distributed backend systems (Raft protocol in Go).\n\nRecently, I architected VYUVIK, an intelligent academic system handling complex state synchronization and document intelligence pipelines. I would love to bring this level of rigour to your engineering team.\n\nMy resume and GitHub are attached. Could we schedule a 10-minute introductory call this week?\n\nBest regards,\nAarav Sharma\n+91 98765 43210 | aarav@dtu.ac.in`
+      );
+    } else {
+      setDraftContent(
+        matchResult?.customCoverLetter ||
+          `Dear Hiring Team at ${selectedOpp?.company || 'the organization'},\n\nI am thrilled to apply for the ${selectedOpp?.role || 'Software Development Engineer Intern'} position. With hands-on engineering experience in building full-stack web applications and robust distributed systems, I bring a solid foundation in React, TypeScript, Go, and relational database design.\n\nThank you for considering my candidacy. I look forward to the possibility of discussing how my skills align with your upcoming goals.\n\nSincerely,\nAarav Sharma`
+      );
+    }
+    setShowApprovalModal(true);
+  };
+
+  const handleApproveDraft = () => {
+    if (!selectedOpp) return;
+    // Save draft into selected opportunity notes for permanent persistence
+    const updatedNotes = `${selectedOpp.notes || ''}\n\n[Approved ${draftType === 'cold_email' ? 'Cold Outreach Email' : 'Cover Letter'} on ${new Date().toLocaleDateString('en-IN')}]:\n${draftContent}`;
+    selectedOpp.notes = updatedNotes;
+    setShowApprovalModal(false);
+    setApprovalMessage(`Approved & saved ${draftType === 'cold_email' ? 'Cold Email' : 'Cover Letter'} to ${selectedOpp.company} records!`);
+    setTimeout(() => setApprovalMessage(null), 3500);
   };
 
   const handleCreateOpportunity = (e: React.FormEvent<HTMLFormElement>) => {
@@ -124,6 +157,17 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
           </button>
         </div>
       </div>
+
+      {/* Approval Success Banner */}
+      {approvalMessage && (
+        <div className="p-3.5 bg-[#EAF7F3] border border-[#A7E3D3] rounded-2xl flex items-center justify-between text-xs text-[#136652] shadow-2xs animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#18856B]" />
+            <span className="font-semibold">{approvalMessage}</span>
+          </div>
+          <span className="font-bold text-[#18856B]">Dossier Updated</span>
+        </div>
+      )}
 
       {/* Two-Column Workspace: Left List + Right JD Matcher & Application Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -287,17 +331,40 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
                     </div>
                   )}
 
-                  {/* Tailored Cover Letter Preview */}
-                  {matchResult.customCoverLetter && (
-                    <div>
-                      <h4 className="text-xs font-bold text-[#171827] uppercase tracking-wider mb-2">
-                        Drafted Tailored Cover Letter
-                      </h4>
-                      <div className="p-3.5 bg-[#FAFAFC] rounded-xl border border-[#E8E8EF] text-xs text-[#171827] whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
-                        {matchResult.customCoverLetter}
-                      </div>
+                  {/* Outreach Generators & Approval Actions */}
+                  <div className="pt-3 border-t border-[#E8E8EF] space-y-3">
+                    <h4 className="text-xs font-bold text-[#171827] uppercase tracking-wider">
+                      Tailored Application Materials (with verified student skills)
+                    </h4>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <button
+                        onClick={() => handleOpenDraftForApproval('cold_email')}
+                        className="bg-[#FAFAFC] hover:bg-[#F0EEFF] text-[#7065E8] border border-[#E8E8EF] px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-colors"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Review Tailored Cold Email</span>
+                      </button>
+                      <button
+                        onClick={() => handleOpenDraftForApproval('cover_letter')}
+                        className="bg-[#FAFAFC] hover:bg-[#F0EEFF] text-[#7065E8] border border-[#E8E8EF] px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-colors"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>Review Formal Cover Letter</span>
+                      </button>
                     </div>
-                  )}
+                  </div>
+                </div>
+              )}
+
+              {/* Saved Notes / Dossier */}
+              {selectedOpp.notes && (
+                <div className="pt-3 border-t border-[#E8E8EF]">
+                  <h4 className="text-xs font-bold text-[#171827] uppercase tracking-wider mb-1.5">
+                    Application Dossier & Notes
+                  </h4>
+                  <div className="p-3 bg-[#FAFAFC] rounded-xl border border-[#E8E8EF] text-xs text-[#53566B] whitespace-pre-wrap max-h-36 overflow-y-auto">
+                    {selectedOpp.notes}
+                  </div>
                 </div>
               )}
             </div>
@@ -393,6 +460,80 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Review & Approval Modal for Application Outreach */}
+      {showApprovalModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-[#E8E8EF] max-w-xl w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#E8E8EF] pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-[#171827] flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#7065E8]" />
+                  Review & Approve Tailored {draftType === 'cold_email' ? 'Cold Outreach Email' : 'Cover Letter'}
+                </h3>
+                <p className="text-[11px] text-[#717487]">
+                  Personalized for {selectedOpp?.role} at {selectedOpp?.company}. You can edit directly before saving or copying.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowApprovalModal(false)}
+                className="text-[#717487] hover:text-[#171827]"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2 text-xs">
+              <label className="font-semibold text-[#171827]">
+                Editable Content:
+              </label>
+              <textarea
+                value={draftContent}
+                onChange={(e) => setDraftContent(e.target.value)}
+                rows={9}
+                className="w-full p-3 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-xs sm:text-sm text-[#171827] leading-relaxed focus:outline-hidden focus:border-[#7065E8] font-mono"
+              />
+            </div>
+
+            <div className="p-3 bg-[#FAFAFC] rounded-xl border border-[#E8E8EF] text-[11px] text-[#53566B]">
+              <span className="font-bold text-[#18856B]">Verified Profile Signals: </span>
+              DTU CSE, CGPA 8.62, React 19 / TypeScript, Raft Protocol (Go), VYUVIK OS.
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-[#E8E8EF] text-xs">
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(draftContent);
+                  setCopiedDraft(true);
+                  setTimeout(() => setCopiedDraft(false), 2000);
+                }}
+                className="px-3 py-1.5 border border-[#E8E8EF] hover:bg-[#FAFAFC] text-[#171827] rounded-xl font-semibold transition-colors"
+              >
+                {copiedDraft ? 'Copied to Clipboard!' : 'Copy Text'}
+              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowApprovalModal(false)}
+                  className="px-3.5 py-1.5 border border-[#E8E8EF] rounded-xl text-[#717487] font-semibold"
+                >
+                  Discard
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApproveDraft}
+                  className="px-4 py-1.5 bg-[#18856B] hover:bg-[#14705a] text-white rounded-xl font-semibold shadow-xs flex items-center gap-1.5"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Approve & Save to Dossier</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

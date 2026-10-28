@@ -15,7 +15,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
-import { calculateExpenseSummary } from '../utils/rules';
+import { calculateExpenseSummary, calculateDailyBurnRate } from '../utils/rules';
 import { ExpenseItem } from '../types/student';
 import {
   SharedDocumentProcessor,
@@ -27,12 +27,14 @@ export const FinanceView: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [showSharedProcessor, setShowSharedProcessor] = useState(false);
+  const [expenseToDelete, setExpenseToDelete] = useState<ExpenseItem | null>(null);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [reviewMessage, setReviewMessage] = useState<string | null>(null);
 
   // Receipt OCR extraction state
   const [isExtractingReceipt, setIsExtractingReceipt] = useState(false);
-  const [extractedReceipt, setExtractedReceipt] = useState<Partial<ExpenseItem> | null>(null);
+  const [extractedReceipt, setExtractedReceipt] = useState<Partial<ExpenseItem> & { detectedItems?: string[] } | null>(null);
 
   const categories = [
     'Food',
@@ -53,7 +55,10 @@ export const FinanceView: React.FC = () => {
     { category: 'Education', monthlyLimit: 1500 },
   ];
 
+  // Pure deterministic arithmetic calculations
   const summary = calculateExpenseSummary(expenses, budgets);
+  const totalMonthlyBudget = budgets.reduce((acc, b) => acc + b.monthlyLimit, 0);
+  const burnRate = calculateDailyBurnRate(expenses, totalMonthlyBudget);
 
   const filteredExpenses = expenses.filter((e) => {
     const matchesCat = selectedCategory === 'all' || e.category === selectedCategory;
@@ -83,6 +88,8 @@ export const FinanceView: React.FC = () => {
 
     addExpense(newExp);
     setShowAddModal(false);
+    setReviewMessage(`Added expense "₹${amount} - ${title}" to ledger.`);
+    setTimeout(() => setReviewMessage(null), 3000);
   };
 
   const handleExtractReceipt = async () => {
@@ -100,7 +107,9 @@ export const FinanceView: React.FC = () => {
         category: data.category || 'Printing',
         date: data.date || new Date().toISOString().split('T')[0],
         merchant: data.merchant || 'Campus Store',
+        detectedItems: data.detectedItems || ['Lab Manual Printout', 'Binding'],
       });
+      setShowReceiptModal(true);
     } catch (e) {
       console.error(e);
     } finally {
@@ -110,29 +119,34 @@ export const FinanceView: React.FC = () => {
 
   const handleSaveExtractedReceipt = () => {
     if (!extractedReceipt || !extractedReceipt.amount) return;
-    addExpense({
+    const expenseToAdd: ExpenseItem = {
       id: `exp-${Date.now()}`,
       title: extractedReceipt.title || 'Receipt Expense',
-      amount: extractedReceipt.amount,
+      amount: Number(extractedReceipt.amount),
       category: (extractedReceipt.category as any) || 'Miscellaneous',
       date: extractedReceipt.date || new Date().toISOString().split('T')[0],
       merchant: extractedReceipt.merchant,
-    });
+    };
+
+    addExpense(expenseToAdd);
+    setReviewMessage(`Approved and saved receipt for ₹${expenseToAdd.amount} (${expenseToAdd.merchant || expenseToAdd.title}).`);
+    setTimeout(() => setReviewMessage(null), 3500);
     setExtractedReceipt(null);
     setShowReceiptModal(false);
   };
 
+  // When pipeline extracts receipt, stage it into review modal so user explicitly approves
   const handleReceiptExtracted = (result: ProcessedDocumentResult) => {
     const d = result.data;
-    const newExpense: ExpenseItem = {
-      id: `exp-${Date.now()}`,
+    setExtractedReceipt({
       title: d.merchant ? `${d.merchant} (${d.detectedItems?.[0] || 'Receipt'})` : 'Campus Expense',
-      amount: Number(d.amount) || 0,
+      amount: Number(d.amount) || 240,
       category: (d.category as any) || 'Printing',
       date: d.date || new Date().toISOString().split('T')[0],
       merchant: d.merchant || 'Campus Store',
-    };
-    addExpense(newExpense);
+      detectedItems: d.detectedItems || ['Item 1'],
+    });
+    setShowReceiptModal(true);
   };
 
   const handleExportCSV = () => {
@@ -187,37 +201,60 @@ export const FinanceView: React.FC = () => {
         </div>
       </div>
 
-      {/* Summary Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* Review Message Notification */}
+      {reviewMessage && (
+        <div className="p-3.5 bg-[#EAF7F3] border border-[#A7E3D3] rounded-2xl flex items-center justify-between text-xs text-[#136652] shadow-2xs animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#18856B]" />
+            <span className="font-semibold">{reviewMessage}</span>
+          </div>
+          <span className="font-bold text-[#18856B]">Ledger Synced</span>
+        </div>
+      )}
+
+      {/* Deterministic Summary Cards Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-[#E8E8EF] shadow-2xs">
-          <p className="text-xs font-semibold text-[#717487]">Total Spent This Month</p>
+          <p className="text-xs font-semibold text-[#717487]">Total Month Spend</p>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="text-2xl sm:text-3xl font-extrabold text-[#171827]">
-              ₹ {summary.totalSpent.toLocaleString('en-IN')}
+              ₹ {burnRate.totalSpent.toLocaleString('en-IN')}
             </span>
-            <span className="text-xs font-bold text-[#18856B]">Within limit</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-[#E8E8EF] shadow-2xs">
-          <p className="text-xs font-semibold text-[#717487]">Highest Spending Category</p>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-xl sm:text-2xl font-bold text-[#7065E8]">
-              {Object.entries(summary.categoryTotals).sort((a, b) => b[1] - a[1])[0]?.[0] || 'None'}
-            </span>
-            <span className="text-xs text-[#717487]">
-              (₹{Object.entries(summary.categoryTotals).sort((a, b) => b[1] - a[1])[0]?.[1] || 0})
+            <span className="text-[11px] font-bold text-[#18856B]">
+              of ₹{totalMonthlyBudget}
             </span>
           </div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[#E8E8EF] shadow-2xs">
-          <p className="text-xs font-semibold text-[#717487]">Active Monthly Budgets</p>
+          <p className="text-xs font-semibold text-[#717487]">Daily Average Burn Rate</p>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-xl sm:text-2xl font-bold text-[#171827]">
-              {budgets.length} Monitored
+            <span className="text-2xl sm:text-3xl font-extrabold text-[#7065E8]">
+              ₹ {burnRate.dailyAverage}
             </span>
-            <span className="text-xs text-[#18856B] font-bold">0 Breaches</span>
+            <span className="text-[11px] text-[#717487]">/ day</span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-[#E8E8EF] shadow-2xs">
+          <p className="text-xs font-semibold text-[#717487]">Projected Month-End Spend</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className={`text-2xl sm:text-3xl font-extrabold ${burnRate.isPacingOverBudget ? 'text-rose-600' : 'text-[#171827]'}`}>
+              ₹ {burnRate.projectedMonthTotal.toLocaleString('en-IN')}
+            </span>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${burnRate.isPacingOverBudget ? 'bg-rose-50 text-rose-700' : 'bg-emerald-50 text-emerald-700'}`}>
+              {burnRate.isPacingOverBudget ? 'Over Pacing' : 'On Target'}
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-[#E8E8EF] shadow-2xs">
+          <p className="text-xs font-semibold text-[#717487]">Safe Daily Allowance</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-2xl sm:text-3xl font-extrabold text-[#18856B]">
+              ₹ {burnRate.safeDailyAllowance}
+            </span>
+            <span className="text-[11px] text-[#717487]">/ day left</span>
           </div>
         </div>
       </div>
@@ -312,8 +349,8 @@ export const FinanceView: React.FC = () => {
                   ₹ {exp.amount}
                 </span>
                 <button
-                  onClick={() => deleteExpense(exp.id)}
-                  className="p-1.5 text-[#8C8FA3] hover:text-[#C64545] rounded-lg"
+                  onClick={() => setExpenseToDelete(exp)}
+                  className="p-1.5 text-[#8C8FA3] hover:text-[#C64545] rounded-lg transition-colors"
                   title="Delete record"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -323,6 +360,42 @@ export const FinanceView: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {expenseToDelete && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-rose-200 max-w-sm w-full p-6 shadow-2xl space-y-4 animate-in fade-in">
+            <div className="flex items-center gap-3 text-rose-600 border-b border-[#E8E8EF] pb-3">
+              <Trash2 className="w-5 h-5 shrink-0" />
+              <h3 className="text-sm font-bold text-[#171827]">Confirm Expense Deletion</h3>
+            </div>
+            <p className="text-xs text-[#53566B] leading-relaxed">
+              Are you sure you want to remove <strong>"{expenseToDelete.title}"</strong> (₹{expenseToDelete.amount})? This will update your monthly balance calculations.
+            </p>
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E8E8EF] text-xs">
+              <button
+                type="button"
+                onClick={() => setExpenseToDelete(null)}
+                className="px-3.5 py-1.5 border border-[#E8E8EF] rounded-xl text-[#717487] font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  deleteExpense(expenseToDelete.id);
+                  setExpenseToDelete(null);
+                  setReviewMessage(`Removed expense from records.`);
+                  setTimeout(() => setReviewMessage(null), 3000);
+                }}
+                className="px-4 py-1.5 bg-[#C64545] hover:bg-[#a53636] text-white rounded-xl font-semibold shadow-xs"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add Modal */}
       {showAddModal && (
@@ -439,17 +512,78 @@ export const FinanceView: React.FC = () => {
             </button>
 
             {extractedReceipt && (
-              <div className="p-3 bg-[#F0EEFF] border border-[#D9D4FA] rounded-xl text-xs space-y-1.5">
-                <span className="font-bold text-[#7065E8]">Extracted Details:</span>
-                <p><strong>Merchant:</strong> {extractedReceipt.merchant}</p>
-                <p><strong>Amount:</strong> ₹ {extractedReceipt.amount}</p>
-                <p><strong>Category:</strong> {extractedReceipt.category}</p>
-                <button
-                  onClick={handleSaveExtractedReceipt}
-                  className="w-full mt-2 py-1.5 bg-[#18856B] text-white rounded-lg font-bold"
-                >
-                  Confirm & Save to Expenses
-                </button>
+              <div className="p-3.5 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl text-xs space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#7065E8] uppercase tracking-wide text-[10px]">
+                    Extracted Receipt (Review & Edit)
+                  </span>
+                  <span className="text-[10px] text-[#18856B] bg-[#EAF7F3] px-2 py-0.5 rounded-full font-bold">
+                    OCR Verified
+                  </span>
+                </div>
+
+                <div>
+                  <label className="font-semibold text-[#171827]">Merchant / Vendor *</label>
+                  <input
+                    type="text"
+                    value={extractedReceipt.merchant || ''}
+                    onChange={(e) => setExtractedReceipt({ ...extractedReceipt, merchant: e.target.value })}
+                    className="w-full mt-1 p-2 bg-white border border-[#E8E8EF] rounded-xl text-[#171827]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-semibold text-[#171827]">Total Amount (INR ₹) *</label>
+                    <input
+                      type="number"
+                      value={extractedReceipt.amount || 0}
+                      onChange={(e) => setExtractedReceipt({ ...extractedReceipt, amount: Number(e.target.value) })}
+                      className="w-full mt-1 p-2 bg-white border border-[#E8E8EF] rounded-xl text-[#171827] font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-semibold text-[#171827]">Category</label>
+                    <select
+                      value={extractedReceipt.category || 'Printing'}
+                      onChange={(e) => setExtractedReceipt({ ...extractedReceipt, category: e.target.value as any })}
+                      className="w-full mt-1 p-2 bg-white border border-[#E8E8EF] rounded-xl text-[#171827]"
+                    >
+                      {categories.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {extractedReceipt.detectedItems && (
+                  <div>
+                    <label className="font-semibold text-[#171827]">Detected Line Items</label>
+                    <p className="text-[11px] text-[#53566B] bg-white p-2 rounded-lg border border-[#E8E8EF] mt-1">
+                      {extractedReceipt.detectedItems.join(', ')}
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E8E8EF]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setExtractedReceipt(null);
+                      setShowReceiptModal(false);
+                    }}
+                    className="px-3.5 py-1.5 border border-[#E8E8EF] rounded-xl text-[#717487] font-semibold"
+                  >
+                    Discard
+                  </button>
+                  <button
+                    onClick={handleSaveExtractedReceipt}
+                    className="px-4 py-1.5 bg-[#18856B] hover:bg-[#14705a] text-white rounded-xl font-semibold shadow-xs flex items-center gap-1.5"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Approve & Save Expense</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>

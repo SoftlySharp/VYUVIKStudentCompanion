@@ -160,6 +160,58 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         </div>
       </div>
 
+      {/* Proactive Priority Intelligence Radar */}
+      {(criticalAttendance.length > 0 || pendingAssignments.some((a) => a.priority === 'high')) && (
+        <div className="p-4 bg-white rounded-2xl border border-amber-200 shadow-2xs space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+              <h3 className="text-xs font-bold text-[#171827] uppercase tracking-wider flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-amber-600" />
+                Proactive Priority Radar (Action Required)
+              </h3>
+            </div>
+            <span className="text-[10px] text-[#717487] font-semibold">Real-time Cross-Module Scan</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            {criticalAttendance.length > 0 && (
+              <div className="p-3 bg-rose-50 border border-rose-100 rounded-xl flex items-start justify-between gap-3 text-rose-900">
+                <div>
+                  <span className="font-bold block mb-0.5">Attendance Shortage Alert</span>
+                  <p className="text-[11px] text-rose-800">
+                    {criticalAttendance[0].name} is at {Math.round((criticalAttendance[0].attended / criticalAttendance[0].conducted) * 100)}% (Target: 75%).
+                  </p>
+                </div>
+                <button
+                  onClick={() => onNavigate('/attendance')}
+                  className="px-2.5 py-1 bg-white hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-semibold shrink-0"
+                >
+                  View Bunk Math
+                </button>
+              </div>
+            )}
+
+            {pendingAssignments.some((a) => a.priority === 'high') && (
+              <div className="p-3 bg-amber-50 border border-amber-100 rounded-xl flex items-start justify-between gap-3 text-amber-900">
+                <div>
+                  <span className="font-bold block mb-0.5">High Urgency Assignment</span>
+                  <p className="text-[11px] text-amber-800 truncate max-w-xs">
+                    {pendingAssignments.find((a) => a.priority === 'high')?.title}
+                  </p>
+                </div>
+                <button
+                  onClick={() => onNavigate('/academics/planner')}
+                  className="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg text-[11px] font-semibold shrink-0"
+                >
+                  Schedule in Planner
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Metric Cards Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div

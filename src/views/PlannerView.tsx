@@ -13,7 +13,11 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
-import { validateAndAllocateStudySlots } from '../utils/rules';
+import {
+  validateAndAllocateStudySlots,
+  checkScheduleConflict,
+  ConflictCheckResult,
+} from '../utils/rules';
 import { StudyBlock } from '../types/student';
 
 export const PlannerView: React.FC = () => {
@@ -22,10 +26,19 @@ export const PlannerView: React.FC = () => {
   const [startHour, setStartHour] = useState(18); // 6:00 PM
   const [selectedDay, setSelectedDay] = useState('Today');
   const [showAutoPlanModal, setShowAutoPlanModal] = useState(false);
+  const [showPlanReviewModal, setShowPlanReviewModal] = useState(false);
+  const [proposedPlan, setProposedPlan] = useState<StudyBlock[]>([]);
+  const [overflowWarning, setOverflowWarning] = useState<string | null>(null);
+
+  // Manual block conflict state
+  const [activeConflict, setActiveConflict] = useState<{
+    result: ConflictCheckResult;
+    pendingBlock: StudyBlock;
+  } | null>(null);
   const [conflictReport, setConflictReport] = useState<string | null>(null);
 
-  // Re-generate deterministic study blocks from current assignments
-  const handleAutoGeneratePlan = () => {
+  // Auto-generate plan with review step
+  const handlePrepareAutoPlan = () => {
     const inputs = assignments.map((a) => ({
       id: a.id,
       title: `${a.title.slice(0, 35)}... (Module Review)`,
@@ -49,19 +62,30 @@ export const PlannerView: React.FC = () => {
       day: selectedDay,
     }));
 
-    setStudyBlocks(generatedBlocks);
+    setProposedPlan(generatedBlocks);
 
     if (result.overflowBlocks.length > 0) {
-      setConflictReport(
-        `Daily study capacity reached (${dailyMinutes} minutes). ${result.overflowBlocks.length} assignment task(s) (${result.overflowBlocks
+      setOverflowWarning(
+        `Capacity limit reached (${dailyMinutes} mins). ${result.overflowBlocks.length} module task(s) (${result.overflowBlocks
           .map((b) => b.subject)
-          .join(', ')}) overflow into tomorrow to prevent cognitive fatigue and unrealistic workload.`
+          .join(', ')}) overflow into tomorrow to maintain healthy cognitive load.`
       );
     } else {
-      setConflictReport(null);
+      setOverflowWarning(null);
     }
 
     setShowAutoPlanModal(false);
+    setShowPlanReviewModal(true);
+  };
+
+  const handleApprovePlan = () => {
+    // Preserve other days' blocks, replace selectedDay's blocks with approved plan
+    setStudyBlocks((prev) => [
+      ...prev.filter((b) => b.day !== selectedDay),
+      ...proposedPlan,
+    ]);
+    setShowPlanReviewModal(false);
+    setConflictReport(overflowWarning);
   };
 
   const handleAddCustomBlock = (e: React.FormEvent<HTMLFormElement>) => {
@@ -87,8 +111,38 @@ export const PlannerView: React.FC = () => {
       day: selectedDay,
     };
 
+    // Check for scheduling conflicts against existing blocks on the same day
+    const conflict = checkScheduleConflict(newBlock, studyBlocks);
+
+    if (conflict.hasConflict && conflict.conflictType === 'overlap') {
+      setActiveConflict({ result: conflict, pendingBlock: newBlock });
+      return;
+    }
+
     setStudyBlocks((prev) => [...prev, newBlock]);
+    if (conflict.conflictType === 'fatigue_warning') {
+      setConflictReport(conflict.conflicts[0]);
+    } else {
+      setConflictReport(null);
+    }
     form.reset();
+  };
+
+  const handleAcceptSuggestedTime = () => {
+    if (!activeConflict || !activeConflict.result.suggestedStartTime) return;
+    const adjustedBlock: StudyBlock = {
+      ...activeConflict.pendingBlock,
+      startTime: activeConflict.result.suggestedStartTime,
+      endTime: activeConflict.result.suggestedEndTime || activeConflict.pendingBlock.endTime,
+    };
+    setStudyBlocks((prev) => [...prev, adjustedBlock]);
+    setActiveConflict(null);
+  };
+
+  const handleForceAddBlock = () => {
+    if (!activeConflict) return;
+    setStudyBlocks((prev) => [...prev, activeConflict.pendingBlock]);
+    setActiveConflict(null);
   };
 
   const totalMinutesAllocated = studyBlocks.reduce((acc, b) => acc + b.durationMinutes, 0);
@@ -382,11 +436,157 @@ export const PlannerView: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={handleAutoGeneratePlan}
+                onClick={handlePrepareAutoPlan}
                 className="px-4 py-1.5 bg-[#7065E8] hover:bg-[#5E52E2] text-white rounded-xl text-xs font-semibold shadow-xs"
               >
-                Run Scheduling Engine
+                Review Proposed Plan
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Plan Review & Approval Modal */}
+      {showPlanReviewModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-[#E8E8EF] max-w-xl w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#E8E8EF] pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-[#171827] flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#18856B]" />
+                  Review & Approve Generated Study Schedule
+                </h3>
+                <p className="text-[11px] text-[#717487]">
+                  Verify proposed time allocations for {selectedDay} before committing to your academic schedule.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowPlanReviewModal(false)}
+                className="text-[#717487] hover:text-[#171827]"
+              >
+                ✕
+              </button>
+            </div>
+
+            {overflowWarning && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2 text-xs text-amber-900">
+                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <span>{overflowWarning}</span>
+              </div>
+            )}
+
+            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+              {proposedPlan.map((slot, index) => (
+                <div
+                  key={slot.id}
+                  className="p-3 bg-[#FAFAFC] border border-[#E8E8EF] rounded-xl flex items-center justify-between gap-3 text-xs"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-5 h-5 rounded-full bg-[#F0EEFF] text-[#7065E8] font-bold text-[10px] flex items-center justify-center shrink-0">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <p className="font-bold text-[#171827]">{slot.title}</p>
+                      <p className="text-[11px] text-[#7065E8] font-semibold">{slot.subject}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="text-right">
+                      <span className="font-bold text-[#171827] block">{slot.startTime} - {slot.endTime}</span>
+                      <span className="text-[10px] text-[#717487]">{slot.durationMinutes} mins</span>
+                    </div>
+                    <button
+                      onClick={() => setProposedPlan((prev) => prev.filter((p) => p.id !== slot.id))}
+                      className="p-1 text-[#8C8FA3] hover:text-[#C64545] rounded-md"
+                      title="Remove slot"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between pt-3 border-t border-[#E8E8EF] text-xs">
+              <span className="text-[#717487]">
+                Total: <strong className="text-[#171827]">{proposedPlan.reduce((acc, p) => acc + p.durationMinutes, 0)} mins</strong> across {proposedPlan.length} sessions
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPlanReviewModal(false)}
+                  className="px-3 py-1.5 border border-[#E8E8EF] rounded-xl text-[#717487] font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApprovePlan}
+                  className="px-4 py-1.5 bg-[#18856B] hover:bg-[#14705a] text-white rounded-xl font-semibold shadow-xs flex items-center gap-1.5"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Approve & Commit Plan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Schedule Conflict Resolution Modal */}
+      {activeConflict && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-rose-200 max-w-md w-full p-6 shadow-2xl space-y-4 animate-in fade-in">
+            <div className="flex items-center gap-3 border-b border-[#E8E8EF] pb-3 text-rose-700">
+              <AlertTriangle className="w-6 h-6 text-rose-600 shrink-0" />
+              <div>
+                <h3 className="text-sm font-bold text-[#171827]">Schedule Conflict Detected</h3>
+                <p className="text-[11px] text-[#717487]">Overlapping study session on {selectedDay}</p>
+              </div>
+            </div>
+
+            <div className="space-y-2 text-xs">
+              <p className="text-[#53566B]">
+                Your new study block <strong>"{activeConflict.pendingBlock.title}"</strong> ({activeConflict.pendingBlock.startTime} - {activeConflict.pendingBlock.endTime}) collides with:
+              </p>
+              <div className="p-3 bg-rose-50 border border-rose-100 rounded-xl space-y-1 text-rose-900 font-medium">
+                {activeConflict.result.conflicts.map((c, i) => (
+                  <p key={i}>• {c}</p>
+                ))}
+              </div>
+              {activeConflict.result.suggestedStartTime && (
+                <div className="p-3 bg-[#EAF7F3] border border-[#A7E3D3] rounded-xl text-[#136652]">
+                  <span className="font-bold block mb-0.5">Recommended Conflict-Free Slot:</span>
+                  <span>{activeConflict.result.suggestedStartTime} to {activeConflict.result.suggestedEndTime} (includes 10m buffer)</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-2 pt-2 border-t border-[#E8E8EF] text-xs">
+              <button
+                type="button"
+                onClick={() => setActiveConflict(null)}
+                className="w-full sm:w-auto px-3 py-1.5 border border-[#E8E8EF] rounded-xl text-[#717487] font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleForceAddBlock}
+                className="w-full sm:w-auto px-3 py-1.5 border border-rose-300 text-rose-700 hover:bg-rose-50 rounded-xl font-semibold"
+              >
+                Force Overlap
+              </button>
+              {activeConflict.result.suggestedStartTime && (
+                <button
+                  type="button"
+                  onClick={handleAcceptSuggestedTime}
+                  className="w-full sm:w-auto px-4 py-1.5 bg-[#7065E8] hover:bg-[#5E52E2] text-white rounded-xl font-semibold shadow-xs"
+                >
+                  Apply Suggested Time
+                </button>
+              )}
             </div>
           </div>
         </div>

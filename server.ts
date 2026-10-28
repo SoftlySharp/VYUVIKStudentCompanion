@@ -652,9 +652,14 @@ Return JSON with:
     if (action === 'evaluate_answer') {
       if (!ai) {
         const wordCount = (studentAnswer || '').trim().split(/\s+/).length;
-        const score = Math.min(10, Math.max(4, Math.round(wordCount / 10 * 3 + 5)));
+        const score = Math.min(10, Math.max(4, Math.round((wordCount / 10) * 3 + 5)));
         return res.json({
           score,
+          rubricBreakdown: {
+            conceptualAccuracy: Math.min(10, Math.max(5, Math.round(score * 0.95))),
+            technicalDepth: Math.min(10, Math.max(4, Math.round(score * 0.9))),
+            communicationClarity: Math.min(10, Math.max(5, Math.round(score * 1.05))),
+          },
           feedback: `Good attempt! You demonstrated solid understanding of the core concept. To score top marks in a viva, expand on the practical trade-offs and cite real metrics or constraints.`,
           strengths: ['Addressed the main question directly', 'Used appropriate technical vocabulary'],
           areasForImprovement: ['Mention specific fallback strategies', 'Add runtime complexity or benchmark statistics'],
@@ -669,6 +674,7 @@ Student's verbal/typed response: "${studentAnswer}"
 
 Evaluate objectively in JSON:
 - score (integer 1 to 10)
+- rubricBreakdown: { conceptualAccuracy (1 to 10), technicalDepth (1 to 10), communicationClarity (1 to 10) }
 - feedback (constructive paragraph)
 - strengths (array of strings)
 - areasForImprovement (array of strings)
@@ -748,6 +754,7 @@ app.post('/api/gemini/internship-match', async (req, res) => {
             impact: 'Showcases performance optimization and API reliability practices.',
           },
         ],
+        tailoredColdEmail: `Subject: Application: ${role || 'Software Engineering Intern'} - Aarav Sharma (DTU CSE)\n\nHi ${company || 'Engineering'} Team,\n\nI came across your open ${role || 'Internship'} opening and wanted to reach out. I'm a pre-final year CS student at Delhi Technological University with strong hands-on experience in React 19, TypeScript, Node.js, and distributed systems.\n\nRecently, I built VYUVIK (a full-stack academic OS with deterministic scheduling and document intelligence) and implemented a Raft consensus engine in Go. Given your emphasis on performance and clean architecture, I'd love to contribute to your engineering milestones this semester.\n\nMy resume and GitHub are attached. Would you be open to a 10-minute chat this week?\n\nBest regards,\nAarav Sharma\n+91 98765 43210 | aarav@dtu.ac.in`,
         customCoverLetter: `Dear Hiring Team at ${company || 'the organization'},\n\nI am writing to express my eager interest in the ${role || 'Software Engineering Intern'} position. With hands-on experience developing production-grade web applications in React, TypeScript, and Node.js, I bridge modern frontend ergonomics with robust backend services.\n\nMy recent projects include building intelligent student workflow tools with automated document processing and deterministic scheduling engines. I admire your team's engineering standards and would love to contribute to your upcoming product milestones.\n\nThank you for considering my application.\n\nWarm regards,\nStudent Applicant`,
         interviewQuestions: [
           'How do you handle state synchronization across multiple independent modules in React?',
@@ -769,6 +776,7 @@ Provide ATS-grade analysis in JSON:
 - matchingSkills (array of strings)
 - missingSkills (array of strings)
 - bulletImprovements (array of { original, improved, impact })
+- tailoredColdEmail (concise 3-paragraph cold outreach email for hiring manager)
 - customCoverLetter (professionally drafted tailored letter)
 - interviewQuestions (array of 3 high-probability questions)`;
 

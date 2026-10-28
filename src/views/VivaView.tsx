@@ -25,6 +25,11 @@ interface VivaQuestion {
 
 interface EvaluationResult {
   score: number;
+  rubricBreakdown?: {
+    conceptualAccuracy: number;
+    technicalDepth: number;
+    communicationClarity: number;
+  };
   feedback: string;
   strengths: string[];
   areasForImprovement: string[];
@@ -33,7 +38,7 @@ interface EvaluationResult {
 }
 
 export const VivaView: React.FC = () => {
-  const { profile } = useStudent();
+  const { profile, documents } = useStudent();
   const [subject, setSubject] = useState('Distributed Consensus (Raft)');
   const [mode, setMode] = useState<'basic' | 'technical' | 'project_defense' | 'rapid_fire'>('technical');
   const [projectSummary, setProjectSummary] = useState(
@@ -67,6 +72,7 @@ export const VivaView: React.FC = () => {
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [sessionScoreHistory, setSessionScoreHistory] = useState<number[]>([]);
+  const [savedSessionMessage, setSavedSessionMessage] = useState<string | null>(null);
 
   const currentQ = questions[currentIdx];
 
@@ -168,6 +174,13 @@ export const VivaView: React.FC = () => {
           </div>
         )}
       </div>
+
+      {savedSessionMessage && (
+        <div className="p-3 bg-[#EAF7F3] border border-[#A7E3D3] rounded-2xl flex items-center gap-2 text-xs text-[#136652] shadow-2xs animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 text-[#18856B]" />
+          <span className="font-semibold">{savedSessionMessage}</span>
+        </div>
+      )}
 
       {/* Mode and Topic Setup */}
       <div className="bg-white p-4 rounded-2xl border border-[#E8E8EF] flex flex-wrap items-center justify-between gap-4 shadow-2xs text-xs">
@@ -295,17 +308,64 @@ export const VivaView: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-[#171827]">Examiner Assessment</span>
                 <span className="text-xs font-bold text-white bg-[#7065E8] px-2.5 py-0.5 rounded-full">
-                  Score: {evaluation.score} / 10
+                  Overall Score: {evaluation.score} / 10
                 </span>
               </div>
-              <button
-                onClick={handleNextQuestion}
-                className="bg-[#18856B] hover:bg-[#14705a] text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-colors"
-              >
-                <span>Next Question</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setSavedSessionMessage(`Viva evaluation for "${currentQ.concept}" (Score: ${evaluation.score}/10) saved to performance portfolio.`);
+                    setTimeout(() => setSavedSessionMessage(null), 3500);
+                  }}
+                  className="px-3 py-1 border border-[#E8E8EF] hover:bg-white text-[#171827] rounded-xl text-xs font-semibold flex items-center gap-1 transition-colors"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#18856B]" />
+                  <span>Save Record</span>
+                </button>
+                <button
+                  onClick={handleNextQuestion}
+                  className="bg-[#18856B] hover:bg-[#14705a] text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-colors"
+                >
+                  <span>Next Question</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
+
+            {/* Structured Rubric Breakdown */}
+            {evaluation.rubricBreakdown && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3.5 bg-white rounded-xl border border-[#E8E8EF] text-xs">
+                <div>
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-semibold text-[#171827]">Conceptual Accuracy</span>
+                    <span className="font-bold text-[#7065E8]">{evaluation.rubricBreakdown.conceptualAccuracy}/10</span>
+                  </div>
+                  <div className="w-full bg-[#E8E8EF] h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-[#7065E8] h-full rounded-full" style={{ width: `${evaluation.rubricBreakdown.conceptualAccuracy * 10}%` }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-semibold text-[#171827]">Technical Depth</span>
+                    <span className="font-bold text-[#18856B]">{evaluation.rubricBreakdown.technicalDepth}/10</span>
+                  </div>
+                  <div className="w-full bg-[#E8E8EF] h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-[#18856B] h-full rounded-full" style={{ width: `${evaluation.rubricBreakdown.technicalDepth * 10}%` }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-semibold text-[#171827]">Communication Clarity</span>
+                    <span className="font-bold text-[#B7791F]">{evaluation.rubricBreakdown.communicationClarity}/10</span>
+                  </div>
+                  <div className="w-full bg-[#E8E8EF] h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-[#B7791F] h-full rounded-full" style={{ width: `${evaluation.rubricBreakdown.communicationClarity * 10}%` }} />
+                  </div>
+                </div>
+              </div>
+            )}
 
             <p className="text-xs sm:text-sm text-[#171827] leading-relaxed">
               {evaluation.feedback}
@@ -344,6 +404,35 @@ export const VivaView: React.FC = () => {
                 {evaluation.idealAnswer}
               </p>
             </div>
+
+            {/* Follow-up Probing Question */}
+            {evaluation.followUpQuestion && (
+              <div className="p-3.5 bg-[#F0EEFF] rounded-xl border border-[#D9D4FA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div>
+                  <span className="font-bold text-[#7065E8] block mb-0.5">Examiner Follow-Up Question:</span>
+                  <span className="text-[#171827] font-medium">"{evaluation.followUpQuestion}"</span>
+                </div>
+                <button
+                  onClick={() => {
+                    setStudentAnswer('');
+                    setEvaluation(null);
+                    setQuestions((prev) => [
+                      ...prev,
+                      {
+                        id: `vq-fu-${Date.now()}`,
+                        question: evaluation.followUpQuestion!,
+                        concept: 'Probing Follow-Up',
+                        expectedKeyPoints: ['Deep trade-offs', 'Failure recovery scenario'],
+                      },
+                    ]);
+                    setCurrentIdx(questions.length);
+                  }}
+                  className="px-3 py-1.5 bg-[#7065E8] hover:bg-[#5E52E2] text-white rounded-xl font-semibold shrink-0"
+                >
+                  Answer Follow-Up
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
