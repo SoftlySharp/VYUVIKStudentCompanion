@@ -339,7 +339,7 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('vyuvik_auth') !== 'false';
+    return localStorage.getItem('vyuvik_auth') === 'true';
   });
 
   // Rehydrate state from backend storage on mount if available

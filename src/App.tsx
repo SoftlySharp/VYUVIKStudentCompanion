@@ -28,7 +28,7 @@ const MainLayout: React.FC = () => {
   const { profile, isAuthenticated } = useStudent();
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     const path = window.location.pathname;
-    return path === '/' ? '/dashboard' : path;
+    return path === '/' ? '/login' : path;
   });
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -36,7 +36,7 @@ const MainLayout: React.FC = () => {
   useEffect(() => {
     const handlePopState = () => {
       const p = window.location.pathname;
-      setCurrentRoute(p === '/' ? '/dashboard' : p);
+      setCurrentRoute(p === '/' ? '/login' : p);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
