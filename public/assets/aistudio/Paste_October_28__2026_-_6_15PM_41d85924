@@ -1,0 +1,1179 @@
+# MASTER BUILD PROMPT — VYUVIK STUDENT COMPANION
+
+Act as a senior full-stack engineer, AI architect, product designer, UX researcher, and QA engineer. Build a complete, functional, responsive AI-powered web application named **VYUVIK Student Companion**.
+
+This is a serious college major project intended to help Indian college students manage their entire academic and college life with less manual effort.
+
+Do not build just a landing page, chatbot UI, static dashboard, or collection of non-functional mock screens. Build an integrated application with working navigation, real state management, persistent database operations, secure server-side AI integration, document-processing workflows, form validation, and useful error handling.
+
+If the complete scope is too large for one generation, first establish the application architecture and core foundation, then implement features in clearly separated phases. Preserve existing working code when implementing later phases.
+
+---
+
+## 1. PRODUCT IDENTITY
+
+Product name: VYUVIK Student Companion
+
+Brand: VYUVIK
+
+Tagline: "Your College Life, Simplified by AI."
+
+Product purpose:
+An intelligent personal assistant that reduces the effort students spend understanding college notices, managing assignments, preparing for exams, organizing documents, filling forms, finding internships, preparing for viva examinations, and tracking expenses.
+
+Target users:
+- Undergraduate students
+- Engineering students
+- Postgraduate students
+- Students preparing for placements and internships
+- Students managing multiple subjects and college deadlines
+
+Core principle:
+ONE STUDENT PROFILE → CONNECTED MODULES → LESS MANUAL WORK.
+
+The application must use shared student data responsibly. Uploading a document once should make it available to other authorized workflows where appropriate, rather than forcing the student to upload it repeatedly.
+
+---
+
+## 2. TECHNOLOGY STACK
+
+Use the following stack wherever supported by the Google AI Studio environment:
+
+Frontend:
+- React
+- TypeScript
+- Vite or the framework scaffolded by AI Studio
+- Tailwind CSS
+- Lucide React icons
+- Reusable component-based architecture
+- Responsive layouts
+- React Router or the routing solution appropriate to the scaffold
+
+Backend:
+- Node.js server-side runtime
+- Secure server-side API endpoints
+- Domain service layer
+- Shared type definitions and schema validation
+- Gemini API for AI features
+
+Database and authentication:
+- Firebase Authentication
+- Firestore for persistent application data
+- Firebase Storage or an appropriate private file-storage solution for uploaded documents
+- Firebase Security Rules that restrict access to authorized users
+
+AI:
+- Gemini API called through server-side code
+- Structured JSON outputs for extraction and task proposals
+- Document and image understanding
+- Retrieval-augmented generation (RAG) for questions about uploaded study materials
+
+Validation:
+- Zod or an equivalent schema validation library
+
+Charts:
+- Recharts or a similar lightweight charting library
+
+Deployment:
+- Keep the application compatible with Google AI Studio's supported full-stack runtime and deployment flow.
+
+Use the existing project scaffold instead of replacing it unnecessarily.
+
+Do not introduce a separate Python microservice unless a specific capability genuinely requires it.
+
+Do not put secret keys in frontend code. Never expose GEMINI_API_KEY, service account credentials, or private API tokens in the browser bundle.
+
+Use AI Studio's server-side secret configuration for Gemini. If Firebase configuration or another external credential is required, provide clear setup instructions and never fabricate credentials.
+
+If an external service is unavailable, implement a clean abstraction and a truthful configuration message instead of pretending that the integration is working.
+
+---
+
+## 3. VISUAL DESIGN SYSTEM — VERY IMPORTANT
+
+Design a SIMPLE, BRIGHT, PREMIUM, MODERN SaaS PRODUCT.
+
+The UI must look like a carefully designed startup product, not a generic AI-generated dashboard or an outdated college management system.
+
+### Design direction
+
+- Light theme by default
+- Clean white and very light warm-gray backgrounds
+- Deep navy or near-black text
+- Soft violet as the primary brand accent
+- Pale lavender backgrounds for selected states
+- Subtle borders
+- Small, tasteful shadows
+- Comfortable whitespace
+- Rounded cards, approximately 12–16px radius
+- Consistent spacing and alignment
+- Refined, restrained use of color
+- Elegant hover, focus, loading and transition states
+- No excessive gradients
+- No unnecessary glassmorphism
+- No excessive neon colors
+- No oversized decorative illustrations
+- No crowded dashboards
+
+### Typography
+
+Use a premium geometric, friendly, rounded sans-serif style inspired by the visual character of Brandon Grotesque.
+
+Use Google Fonts **Manrope** as the primary font and **Plus Jakarta Sans** as an optional heading font if needed.
+
+Use the font weights intentionally:
+- 400 for body copy
+- 500 for secondary labels
+- 600 for buttons and card headings
+- 700 for important headings
+- 800 only for selected hero text and major metrics
+
+Typography should feel bold enough to be premium, but never heavy or difficult to read. Use proper line height, restrained letter spacing and clear type hierarchy.
+
+Do not use an unlicensed copy of Brandon Grotesque. Use Manrope as the practical substitute.
+
+### Suggested colors
+
+- Primary background: #FAFAFC
+- Main surface: #FFFFFF
+- Primary text: #171827
+- Secondary text: #717487
+- Primary violet: #7065E8
+- Soft lavender: #F0EEFF
+- Subtle border: #E8E8EF
+- Success: #18856B
+- Warning: #B7791F
+- Error: #C64545
+
+Use colors consistently through CSS variables or design tokens. Avoid adding a different accent color to every feature.
+
+### Layout
+
+Desktop:
+- Persistent left sidebar approximately 248px wide
+- Main content area with a maximum comfortable reading width
+- Top bar with search, notifications, user profile and settings
+- Consistent page titles, descriptions and primary actions
+
+Mobile:
+- Collapsible navigation or bottom navigation where appropriate
+- Cards should stack naturally
+- Tables should become responsive
+- Forms must remain usable on small screens
+- AI chat must fit mobile screens
+- No horizontal page overflow
+
+### Design quality rules
+
+- Do not display every feature on the dashboard at once.
+- Use progressive disclosure for advanced functions.
+- Prefer clear cards and useful data over decorative elements.
+- Use icons consistently.
+- Avoid emoji-heavy navigation.
+- Every page must have empty states, loading states, error states and success feedback.
+- Make the interface keyboard accessible.
+- Provide visible focus indicators.
+- Respect reduced-motion preferences.
+
+---
+
+## 4. BRAND AND NAVIGATION
+
+Create a minimal VYUVIK brand mark using a graduation-cap-inspired symbol and a subtle AI sparkle. Use Lucide icons or simple CSS artwork. Do not depend on an external logo image to make the interface render.
+
+Sidebar navigation:
+
+1. Dashboard
+2. AI Command Center
+3. Academics
+   - Assignment Manager
+   - Assignment Planner
+   - Previous Year Paper Analyzer
+   - Study Assistant
+   - AI Viva Preparation
+4. College Hub
+   - College Notice Center
+   - Notice Intelligence
+   - Form Filling Assistant
+5. My Documents
+6. Career Hub
+   - Internship Application Assistant
+   - Resume Tools
+7. Expense Manager
+8. Settings
+
+Include an elegant VYUVIK logo area at the top of the sidebar.
+
+Use proper active navigation states and logical breadcrumbs where useful.
+
+---
+
+## 5. AUTHENTICATION AND ONBOARDING
+
+Implement a complete authentication flow:
+- Sign up
+- Sign in
+- Sign out
+- Password recovery
+- Google sign-in if configured
+- Protected routes
+- Session restoration
+- Basic account settings
+
+After signup, guide students through a short onboarding flow.
+
+Collect:
+- Full name
+- College name
+- Degree
+- Branch
+- Current semester or year
+- Subjects
+- Academic goals
+- Preferred study hours
+- Time zone
+
+Do not require every optional field during signup.
+
+Save the profile in the database.
+
+The dashboard must use the authenticated student's actual profile and records, not fixed demo information.
+
+Provide a clearly labeled sample-data/demo mode where useful.
+
+---
+
+## 6. MODULE ONE — AI STUDENT COMMAND CENTER
+
+Route: /assistant
+
+This is the central intelligent assistant of the entire product.
+
+Create an elegant conversational interface with:
+- A welcome greeting
+- Large natural-language input
+- File attachment control
+- Suggested prompts
+- Chat history
+- Streaming or progressive response presentation where supported
+- Clear distinction between AI suggestions and confirmed actions
+
+The student should be able to enter requests in English, Hindi or Hinglish.
+
+Example requests:
+- "Mere teen assignments pending hain aur Friday ko exam hai. Study plan banao."
+- "Is college notice mein mujhe kya karna hai?"
+- "Meri uploaded notes se Unit 3 ke important concepts explain karo."
+- "Mere resume ko is internship ke according improve karo."
+- "Mere saare upcoming deadlines dikhao."
+
+The assistant should classify intents and retrieve relevant student-owned records.
+
+Create an allow-listed action system for operations such as:
+- Create task
+- Update task
+- Generate study plan
+- Analyze notice
+- Prepare form draft
+- Find documents
+- Generate quiz
+- Draft an internship application
+- Record an expense
+
+For every action that changes important data:
+1. Generate an action proposal.
+2. Validate its schema and permissions.
+3. Show a preview to the student.
+4. Require confirmation where appropriate.
+5. Execute through a trusted backend service.
+6. Report success or failure honestly.
+
+Never let the LLM execute arbitrary database queries, code, or privileged operations.
+
+Do not invent missing deadlines, academic policies, or personal data.
+
+Maintain contextual conversation history without unnecessarily sending the student's entire database to the LLM.
+
+---
+
+## 7. MODULE TWO — AI ASSIGNMENT MANAGER
+
+Route: /academics/assignments
+
+Create a full assignment workspace.
+
+Features:
+- Manual assignment creation
+- Upload assignment PDF or image
+- Paste assignment instructions
+- Extract assignment title and subject
+- Extract deadline when explicitly present
+- Extract word limits
+- Extract formatting requirements
+- Extract rubric and deliverables
+- Extract required sections
+- Create an editable checklist
+- Set priority and estimated effort
+- Track progress
+- Mark subtasks complete
+- View pending, in-progress, completed and overdue assignments
+- Search and filter assignments
+- Open assignment details
+
+For uploaded instructions:
+1. Extract readable text.
+2. Use OCR when necessary.
+3. Ask Gemini to produce structured data.
+4. Validate the result.
+5. Display an editable review form.
+6. Save only after student confirmation.
+
+Never assume an ambiguous deadline. Display the relevant source text and request clarification.
+
+Do not automatically write an entire assignment for submission as if it were the student's original work. Emphasize research support, outlines, explanations, citations and responsible drafting.
+
+---
+
+## 8. MODULE THREE — AI ASSIGNMENT PLANNER
+
+Route: /academics/planner
+
+Create a personalized planning interface.
+
+Inputs:
+- Existing assignments
+- Exam dates
+- Assignment deadlines
+- Task difficulty
+- Estimated effort
+- Student's available study hours
+- Existing scheduled commitments
+- Optional breaks and preferred study times
+
+Generate:
+- Today's plan
+- Weekly calendar
+- Subject-wise study blocks
+- Assignment milestones
+- Upcoming deadline warnings
+- Backlog recovery suggestions
+- Revised plan when tasks are missed
+
+The LLM may propose priorities, durations and sequences.
+
+A deterministic scheduling engine must validate:
+- Time conflicts
+- Available time
+- Positive task durations
+- Due-date constraints
+- Existing commitments
+- Completed work
+- Realistic daily workload
+
+Never create an impossible schedule without clearly reporting the conflict.
+
+Allow students to move, edit, approve and delete proposed study blocks.
+
+Save approved plans to the database.
+
+When plans change, preserve student edits and ask before overwriting meaningful existing commitments.
+
+---
+
+## 9. MODULE FOUR — PREVIOUS YEAR PAPER ANALYZER
+
+Route: /academics/previous-papers
+
+Create a paper-analysis workspace.
+
+Features:
+- Upload previous-year question papers
+- Support text-based PDFs and scanned PDFs through OCR
+- Select subject, course, year, semester and exam type
+- Extract individual questions
+- Extract question numbers and marks where available
+- Categorize questions by topic, unit and question type
+- Detect likely duplicates and repeated topics
+- Display frequency charts
+- Display marks distribution
+- Generate topic-wise question banks
+- Create practice quizzes
+- Allow manual correction of extracted data
+
+Provide an analysis dashboard showing:
+- Number of papers analyzed
+- Questions extracted
+- Topic frequency
+- Unit-wise distribution
+- Most frequently observed topics
+- Practice questions available
+
+Distinguish observed historical frequency from actual future exam predictions. Never promise guaranteed exam questions or claim a topic is important without supporting data.
+
+Preserve document provenance and show which paper and year a question came from.
+
+---
+
+## 10. MODULE FIVE — COLLEGE NOTICE CENTER
+
+Route: /college/notices
+
+Create a unified notice inbox.
+
+Features:
+- Upload notice PDF, image or screenshot
+- Add manually entered notice text
+- Organize by category
+- Search and filter notices
+- Mark notices read or unread
+- Pin important notices
+- Link notices to extracted tasks
+- Archive older notices
+- View source information and upload date
+- Identify probable duplicate notices
+
+Categories:
+- Examinations
+- Assignments
+- Fees
+- Scholarships
+- Admissions
+- Events
+- Internships
+- General administration
+
+Provide list and detail views with clean reading typography.
+
+The initial release should support student-uploaded and manually entered notices.
+
+Do not claim automatic access to college WhatsApp groups, Telegram groups or email inboxes unless those integrations have actually been configured and authorized.
+
+---
+
+## 11. MODULE SIX — COLLEGE NOTICE INTELLIGENCE
+
+Route: /college/notice-intelligence
+
+This module must reuse the document-processing infrastructure of the Notice Center.
+
+Extract where available:
+- Notice title
+- Issuing institution or department
+- Publication date
+- Deadline
+- Eligible students
+- Required documents
+- Fees
+- Important conditions
+- Actions required from the student
+- Source page references
+
+Provide:
+- Summary in plain language
+- "What should I do next?" section
+- Editable checklist
+- Deadline preview
+- Missing-information warnings
+- Add-to-task action
+- Reminder setup
+- Original notice viewer
+
+Use structured LLM outputs and server-side validation.
+
+Dates must be represented consistently and displayed in the student's time zone. Distinguish publication dates from deadlines and event dates.
+
+If a date is unclear, show "Needs confirmation" instead of guessing.
+
+Allow students to verify and edit extracted details before saving tasks.
+
+---
+
+## 12. MODULE SEVEN — STUDENT DOCUMENT VAULT
+
+Route: /documents
+
+Create a secure document library.
+
+Supported categories:
+- Identity documents
+- Mark sheets
+- Certificates
+- Resume
+- Fee receipts
+- Scholarship documents
+- Internship documents
+- College forms
+- Study material
+- Other
+
+Features:
+- Private file upload
+- Document preview where supported
+- Search by title and extracted metadata
+- Filter by category
+- Manual rename and recategorization
+- Metadata extraction
+- Upload timestamp
+- Replace file
+- Delete document
+- Reuse selected documents in authorized workflows
+- Expiry-date tracking only when applicable
+
+Extract:
+- Document type
+- Relevant name or institution
+- Dates
+- Registration or reference fields when useful
+- Category suggestion
+
+Treat student IDs, bank details, identity documents and certificates as sensitive.
+
+Apply strict per-user access controls. Files must not be publicly readable.
+
+Use short-lived access URLs where appropriate.
+
+Never include sensitive document contents in application logs.
+
+The vault must never claim that a document is officially verified merely because AI extracted its metadata.
+
+---
+
+## 13. MODULE EIGHT — AI FORM FILLING ASSISTANT
+
+Route: /college/forms
+
+Create a form understanding and prefill workflow.
+
+Input:
+- Supported blank form PDF
+- Image or screenshot of a form
+- Typed form requirements
+- Selected documents from the Student Document Vault
+
+Features:
+- Detect form fields
+- Explain confusing fields
+- Match existing verified profile/document values
+- Suggest field values
+- Flag missing data
+- Flag uncertain or conflicting data
+- Mark the source of proposed values
+- Let the user edit every field
+- Validate required fields
+- Create a saveable draft
+- Export a final draft where supported
+
+Never silently guess sensitive information.
+
+Never invent:
+- Registration numbers
+- Identity numbers
+- Marks
+- Addresses
+- Income details
+- Eligibility claims
+- Signatures
+- Official certifications
+
+Do not silently treat a generated PDF as a successfully submitted official form.
+
+For the initial version, focus on field extraction, editable prefill and downloadable drafts. Integrate actual external portal submission only when an authorized, supported integration is configured.
+
+Always display a final review screen.
+
+---
+
+## 14. MODULE NINE — INTERNSHIP APPLICATION ASSISTANT
+
+Route: /career/internships
+
+Create a career workspace for students.
+
+Features:
+- Resume creation and editing
+- Import resume text or a supported resume file
+- Maintain profile skills and projects
+- Add internship opportunity manually
+- Upload or paste a job description
+- Compare resume with the job description
+- Identify matching and missing skills
+- Explain match results
+- Suggest resume bullet improvements
+- Generate a cover letter draft
+- Prepare application-question drafts
+- Generate interview practice questions
+- Track application status
+
+Statuses:
+- Interested
+- Preparing
+- Applied
+- Interview
+- Rejected
+- Offered
+
+Allow the student to track company, role, application date and follow-up date.
+
+Do not fabricate qualifications, experience, grades, projects, job openings or salary information.
+
+Do not claim that an application was sent unless a verified integration actually sends it and confirms the result.
+
+For the first version, use manually added opportunities and user-provided job descriptions instead of pretending to provide a complete live internship feed.
+
+---
+
+## 15. MODULE TEN — AI VIVA PREPARATION
+
+Route: /academics/viva
+
+Create an interactive viva practice environment.
+
+Inputs:
+- Project report
+- Project description
+- Subject notes
+- Presentation text
+- Source code text where supported
+- Student-selected difficulty
+
+Modes:
+- Basic viva
+- Technical viva
+- Project defense
+- Cross-questioning
+- Rapid-fire practice
+
+Generate:
+- Questions based on the uploaded material
+- Model answers
+- Follow-up questions
+- Concept explanations
+- Weak-topic identification
+- Practice session summaries
+
+Interaction:
+1. Display one question at a time.
+2. Accept typed responses.
+3. Accept voice input only when microphone permission and speech recognition are supported.
+4. Evaluate answers using relevant source material and clear criteria.
+5. Provide constructive feedback and example answers.
+6. Let the student retry.
+7. Save session history.
+
+Separate objective correctness from subjective feedback.
+
+Never claim exact examiner questions or guaranteed marks.
+
+For any answer referencing uploaded documents, show relevant source sections when available.
+
+---
+
+## 16. MODULE ELEVEN — COLLEGE EXPENSE MANAGER
+
+Route: /finance
+
+Create a student-focused expense dashboard.
+
+Features:
+- Add expenses manually
+- Upload receipt image
+- Extract amount, date, merchant and currency
+- Suggest category
+- Confirm before saving receipt-derived entries
+- Edit or delete transactions
+- Monthly spending summary
+- Category distribution chart
+- Budget creation
+- Budget progress indicators
+- Spending history
+- Search and date filters
+- CSV export
+
+Categories:
+- Food
+- Transport
+- Education
+- Printing
+- Hostel and Rent
+- Shopping
+- Entertainment
+- Subscriptions
+- Miscellaneous
+
+All financial totals must be calculated by application code, not by LLM-generated arithmetic.
+
+Prevent duplicate receipt entries where possible, and ask the user to resolve ambiguous amounts or dates.
+
+Use INR as the default currency, while allowing currency selection.
+
+Do not connect to bank accounts or perform payments in the initial version.
+
+Never store bank credentials or sensitive payment information unnecessarily.
+
+---
+
+## 17. OPTIONAL CORE SUPPORT — STUDY ASSISTANT AND ATTENDANCE
+
+Add a Study Assistant that supports:
+- Uploaded PDF question answering
+- Summaries
+- Topic explanations
+- Flashcards
+- MCQs
+- Revision notes
+- Page-referenced answers
+
+Use retrieval-augmented generation rather than relying only on a generic model response.
+
+For document Q&A:
+1. Extract text and preserve page numbers.
+2. Chunk the document.
+3. Generate embeddings using an available embedding model.
+4. Store chunks and vectors in an appropriate vector search implementation.
+5. Retrieve authorized, relevant chunks.
+6. Generate an answer grounded in retrieved content.
+7. Display citations or page references.
+
+If persistent vector infrastructure is not configured, build a useful searchable document workflow first and label the advanced semantic-search feature as requiring configuration.
+
+Also provide an Attendance Tracker with:
+- Subjects
+- Conducted classes
+- Attended classes
+- Percentage calculation
+- Target attendance calculations
+- Future attendance scenarios
+
+Attendance must use deterministic arithmetic.
+
+Never assume a college's attendance policy unless the student supplies or verifies it.
+
+---
+
+## 18. DASHBOARD DESIGN
+
+Route: /dashboard
+
+Create a polished dashboard with a warm, encouraging greeting and a focused layout.
+
+Top:
+- Greeting and student name
+- Date
+- Global search
+- Notifications
+- Profile menu
+
+Main hero:
+A prominent AI prompt card titled:
+
+"What do you need help with today?"
+
+Placeholder:
+"Plan my exams, understand a notice, organize assignments..."
+
+Quick actions:
+- Upload Notice
+- Add Assignment
+- Analyze Paper
+- Find Documents
+- Fill a Form
+- Prepare for Viva
+- Add Expense
+
+Below:
+- Today's priorities
+- Upcoming deadlines
+- Assignments in progress
+- Upcoming exams
+- Recent notices
+- Recent documents
+- Application tracker
+- Monthly expense summary
+
+Use compact summary cards. Avoid creating a giant grid with too many equal-sized cards.
+
+Show real database-derived values for authenticated users.
+
+For new accounts, provide a guided empty state with clearly labeled examples.
+
+Provide a small progress section that encourages planning without using manipulative streaks or shame-based language.
+
+Use skeleton loading states rather than showing fake numbers while data loads.
+
+---
+
+## 19. SHARED DATA MODEL
+
+Create a consistent, documented Firestore schema or another appropriately configured persistent database.
+
+Suggested logical collections:
+
+- users
+- studentProfiles
+- subjects
+- assignments
+- tasks
+- studyPlans
+- studyPlanItems
+- exams
+- questionPapers
+- extractedQuestions
+- notices
+- documents
+- documentExtractions
+- formDrafts
+- resumes
+- internshipOpportunities
+- applications
+- vivaSessions
+- vivaQuestions
+- vivaAnswers
+- expenses
+- budgets
+- chatSessions
+- chatMessages
+- reminders
+- notifications
+- actionProposals
+- aiRuns
+
+Adapt the collection structure to Firestore's query and security model rather than mechanically copying a relational schema.
+
+Every private record must have an enforceable ownership model.
+
+Use stable IDs, creation/update timestamps and explicit status fields.
+
+Avoid storing large PDFs directly inside Firestore documents. Store files in private object storage and save only authorized references and metadata.
+
+Store large extracted content in appropriate separate records with limits and pagination.
+
+For file processing jobs, use explicit statuses, retries and failure messages.
+
+Document the schema and provide setup/migration or initialization scripts as supported by the chosen backend.
+
+---
+
+## 20. SERVER-SIDE AI ARCHITECTURE
+
+Create a central AI service layer with separate functions for each capability.
+
+Suggested service functions:
+- classifyStudentIntent
+- extractAssignmentRequirements
+- generateStudyPlan
+- analyzePreviousYearPaper
+- extractCollegeNotice
+- answerFromStudyDocuments
+- matchFormFields
+- analyzeResumeAgainstJob
+- generateVivaQuestions
+- evaluateVivaAnswer
+- extractExpenseReceipt
+
+Use reusable prompt templates and schema validation.
+
+Prefer structured outputs when the application needs to create tasks, parse dates or fill forms.
+
+Keep context limited to the relevant student-owned records.
+
+Use low-cost model calls for straightforward classification where appropriate and more capable models for complex tasks when available.
+
+Handle:
+- Rate limits
+- Network errors
+- Invalid model responses
+- Empty inputs
+- Oversized documents
+- Unsupported file types
+- Model timeouts
+- Missing API configuration
+
+Use bounded retries and avoid retry loops.
+
+Never claim AI output is guaranteed correct.
+
+Do not put API keys in local storage, client-side environment variables or frontend source files.
+
+---
+
+## 21. FILE AND DOCUMENT PROCESSING
+
+Build a reusable document-processing service shared by:
+- Assignment Manager
+- Previous Year Paper Analyzer
+- College Notice Intelligence
+- Student Document Vault
+- Form Filling Assistant
+- Internship Assistant
+- AI Viva Preparation
+- Expense Manager
+
+Validate file extension, MIME type and size.
+
+Support common formats through appropriate parsing tools. For scanned PDFs and images, use an OCR or multimodal processing fallback.
+
+Store:
+- Original file reference
+- Processing status
+- Extracted text where appropriate
+- Structured extraction
+- Relevant source page numbers
+- Confidence or uncertainty indicators when supported
+- Error details safe for user display
+
+Treat uploaded document text as untrusted input, not as executable instructions.
+
+Never let instructions inside a PDF override system rules, bypass permissions or authorize external actions.
+
+Provide retry and delete options.
+
+---
+
+## 22. REMINDERS AND NOTIFICATIONS
+
+Build a functional reminder experience.
+
+Initial requirements:
+- In-app notifications
+- Upcoming deadline list
+- Reminder preferences
+- Mark as read
+- Due-date status
+- Link to the relevant task or notice
+
+Use reliable scheduling mechanisms supported by the backend where possible.
+
+Do not claim that push notifications or external emails are sent unless the required provider and delivery mechanism are actually configured.
+
+If a durable scheduling service is unavailable, implement a clear in-app reminder system and explain what is required for external notifications.
+
+Use the user's configured timezone for display and scheduling.
+
+---
+
+## 23. SECURITY AND PRIVACY
+
+Security is a mandatory feature, not a future enhancement.
+
+Implement:
+- Authentication on protected routes
+- Server-side user identity checks
+- Database and storage ownership enforcement
+- Private file storage
+- Server-side secret management
+- Input validation
+- File upload restrictions
+- Appropriate rate limiting
+- Safe error messages
+- Resource-level authorization checks
+- Data deletion capabilities
+- Account sign-out
+- Sensitive-data minimization
+
+Never trust a userId sent by the browser as proof of authorization.
+
+Always derive the authenticated identity from a verified session or token.
+
+For every AI action:
+- Validate the action type
+- Validate the target resource
+- Validate user permissions
+- Validate the payload
+- Require user confirmation for meaningful record changes
+
+For multi-user data, enforce isolation through backend checks and database/storage security rules.
+
+Do not create an admin shortcut that bypasses user ownership.
+
+Provide a privacy section explaining what data is stored and how users can delete it.
+
+---
+
+## 24. UI COMPONENTS AND REUSABILITY
+
+Build reusable components such as:
+- AppSidebar
+- AppHeader
+- PageHeader
+- SearchInput
+- AICommandInput
+- FileUploadDropzone
+- DocumentPreview
+- StatusBadge
+- TaskCard
+- DeadlineCard
+- EmptyState
+- LoadingSkeleton
+- ConfirmDialog
+- ToastNotification
+- FormField
+- DataTable
+- ResponsiveChart
+- AIResponseCard
+- SourceCitation
+- ActionPreview
+- ReviewAndConfirmPanel
+
+Maintain consistent spacing, typography, colors and interaction patterns across the application.
+
+Avoid duplicating the same business logic inside multiple components.
+
+Do not use enormous single-file React components. Organize code by feature, service, component and type.
+
+---
+
+## 25. ROUTING
+
+Create working routes for:
+
+/ 
+/login
+/signup
+/onboarding
+/dashboard
+/assistant
+/academics/assignments
+/academics/planner
+/academics/previous-papers
+/academics/study
+/academics/viva
+/college/notices
+/college/notice-intelligence
+/college/forms
+/documents
+/career/internships
+/career/resume
+/finance
+/attendance
+/settings
+
+Protected pages must check authentication.
+
+Every sidebar link and primary action must navigate to the correct functional page.
+
+Avoid dead links and buttons with no action.
+
+---
+
+## 26. TESTING AND QUALITY ASSURANCE
+
+Create an appropriate testing setup.
+
+Test:
+- Authentication
+- Protected routes
+- Database persistence
+- User data isolation
+- File uploads
+- Structured AI extraction
+- Date validation
+- Study plan conflicts
+- Attendance arithmetic
+- Expense totals
+- Resume/application tracking
+- Form review and export
+- RAG citations where supported
+- Loading and failure states
+- Responsive design
+
+Use synthetic demo records that are clearly identified.
+
+Do not use real student identity documents as test fixtures.
+
+After each implementation phase:
+1. Inspect the application.
+2. Run available checks and tests.
+3. Fix compile and runtime errors.
+4. Check important workflows in the live preview.
+5. Verify that previously completed features still work.
+
+Do not claim that a test passed unless it actually ran and passed.
+
+---
+
+## 27. IMPLEMENTATION PHASES
+
+Implement the system in these phases, preserving existing architecture.
+
+Phase 1 — Foundation:
+- Design system
+- Navigation
+- Authentication
+- Student onboarding
+- Dashboard shell
+- Database setup
+- Shared components
+
+Phase 2 — Core academics:
+- Assignment Manager
+- Assignment Planner
+- Task tracking
+- Study Assistant
+- Attendance
+
+Phase 3 — College administration:
+- Notice Center
+- Notice Intelligence
+- Document storage
+- Reminders
+
+Phase 4 — Document-based intelligence:
+- Previous Year Paper Analyzer
+- Document Vault
+- Form Filling Assistant
+- OCR and structured extraction
+
+Phase 5 — Career and personal modules:
+- Internship Assistant
+- Resume tools
+- Viva Preparation
+- Expense Manager
+
+Phase 6 — Unified intelligence:
+- AI Command Center
+- Cross-module context
+- Approved actions
+- Global search
+- Analytics and notifications
+
+Phase 7 — Stabilization:
+- Security review
+- Accessibility
+- Responsive testing
+- Error handling
+- Build fixes
+- Documentation
+- Deployment readiness
+
+At the end of every phase, summarize what is implemented, what was tested, and which real external configurations are still needed.
+
+Do not rebuild the entire app from scratch when continuing a phase.
+
+---
+
+## 28. FINAL EXPECTED RESULT
+
+Deliver a cohesive, responsive, high-quality, full-stack application named VYUVIK Student Companion.
+
+The product must have:
+- A bright and premium design
+- Manrope / Plus Jakarta Sans-inspired typography
+- Clear navigation and accessible interactions
+- Functional student accounts
+- Persistent records
+- All requested feature modules
+- A secure server-side AI integration
+- Shared document processing
+- Reliable validation and confirmation workflows
+- A unified Command Center
+- Clear handling of unavailable integrations
+- Meaningful empty states, errors and loading states
+- Developer documentation and setup instructions
+
+Prioritize usability, correctness, security and integration over decorative UI.
+
+Do not stop after producing a beautiful dashboard. Implement the underlying workflows, connect the modules to real state and persistent data, and verify the available application functionality.
+
+Start by inspecting the current scaffold and establishing the app architecture. Then implement Phase 1 and continue through the remaining phases in manageable increments. Preserve all working code between iterations.
+
+The final experience should feel like a premium, friendly, intelligent student companion that genuinely reduces everyday academic effort.

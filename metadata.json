@@ -1,0 +1,6 @@
+{
+  "name": "VYUVIK Student Companion",
+  "description": "Your College Life, Simplified by AI. All-in-one assistant for Indian college students managing assignments, exams, notices, documents, forms, internships, viva and expenses.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
