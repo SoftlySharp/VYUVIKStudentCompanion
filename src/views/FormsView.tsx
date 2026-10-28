@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   FileSpreadsheet,
-  Sparkles,
   CheckCircle2,
   AlertTriangle,
   Download,
@@ -10,6 +9,7 @@ import {
   FolderLock,
   ArrowRight,
   ShieldCheck,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 import {
@@ -150,7 +150,7 @@ export const FormsView: React.FC = () => {
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#171827] tracking-tight flex items-center gap-2">
             <FileSpreadsheet className="w-6 h-6 text-[#7065E8]" />
-            AI Form Filling Assistant
+            Student Form Filling Assistant
           </h1>
           <p className="text-xs sm:text-sm text-[#717487] mt-0.5">
             Auto-match fields from your verified Student Profile and Document Vault with provenance labels and zero hallucinated credentials.
@@ -162,7 +162,7 @@ export const FormsView: React.FC = () => {
             onClick={() => setShowSharedProcessor(true)}
             className="bg-[#F0EEFF] hover:bg-[#E2DEFE] text-[#7065E8] border border-[#7065E8]/30 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 shadow-2xs transition-colors shrink-0"
           >
-            <Sparkles className="w-4 h-4" />
+            <Zap className="w-4 h-4" />
             <span>Upload & Extract Form Fields</span>
           </button>
           <button

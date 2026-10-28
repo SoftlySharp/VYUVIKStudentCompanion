@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Briefcase,
-  Sparkles,
   CheckCircle2,
   XCircle,
   Plus,
@@ -13,6 +12,7 @@ import {
   Calendar,
   Loader2,
   ExternalLink,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 import { InternshipOpp } from '../types/student';
@@ -270,10 +270,10 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
               <div className="p-4 bg-[#F0EEFF]/50 rounded-2xl border border-[#E0DCFE] space-y-3">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-[#7065E8] flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4" />
+                    <Briefcase className="w-4 h-4" />
                     Compare with Job Description (ATS Analysis)
                   </h4>
-                  <span className="text-[10px] text-[#717487]">Gemini 3.8 Flash</span>
+                  <span className="text-[10px] text-[#717487]">ATS Optimization Engine</span>
                 </div>
 
                 <textarea
@@ -289,7 +289,7 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
                   disabled={isMatching || !jobDescriptionInput.trim()}
                   className="bg-[#7065E8] hover:bg-[#5E52E2] disabled:opacity-50 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
                 >
-                  {isMatching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                  {isMatching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
                   <span>{isMatching ? 'Analyzing Resume vs JD...' : 'Analyze Match & Bullet Improvements'}</span>
                 </button>
               </div>
@@ -341,7 +341,7 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
                         onClick={() => handleOpenDraftForApproval('cold_email')}
                         className="bg-[#FAFAFC] hover:bg-[#F0EEFF] text-[#7065E8] border border-[#E8E8EF] px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-colors"
                       >
-                        <Sparkles className="w-3.5 h-3.5" />
+                        <FileText className="w-3.5 h-3.5" />
                         <span>Review Tailored Cold Email</span>
                       </button>
                       <button
@@ -471,7 +471,7 @@ export const InternshipsView: React.FC<InternshipsViewProps> = ({ onNavigate }) 
             <div className="flex items-center justify-between border-b border-[#E8E8EF] pb-3">
               <div>
                 <h3 className="text-sm font-bold text-[#171827] flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#7065E8]" />
+                  <FileText className="w-4 h-4 text-[#7065E8]" />
                   Review & Approve Tailored {draftType === 'cold_email' ? 'Cold Outreach Email' : 'Cover Letter'}
                 </h3>
                 <p className="text-[11px] text-[#717487]">

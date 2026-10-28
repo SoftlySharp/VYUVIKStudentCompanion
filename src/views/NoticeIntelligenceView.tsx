@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Sparkles,
   CheckCircle2,
   AlertTriangle,
   Clock,
@@ -11,6 +10,7 @@ import {
   Loader2,
   ArrowRight,
   ShieldAlert,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 import { Assignment } from '../types/student';
@@ -140,11 +140,11 @@ Sub: Submission of Examination Forms & Regular End-Semester Fees for Odd Semeste
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#171827] tracking-tight flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-[#7065E8]" />
+            <Zap className="w-6 h-6 text-[#7065E8]" />
             College Notice Intelligence
           </h1>
           <p className="text-xs sm:text-sm text-[#717487] mt-0.5">
-            AI breakdown converting complicated university circulars into plain English, actionable checklists, and verified deadlines.
+            Automated breakdown converting complicated university circulars into plain English, actionable checklists, and verified deadlines.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ Sub: Submission of Examination Forms & Regular End-Semester Fees for Odd Semeste
           <span className="text-xs font-bold text-[#171827] uppercase tracking-wider">
             Notice Text / Circular Scanner
           </span>
-          <span className="text-[11px] text-[#7065E8] font-semibold">Gemini 4 Argon Extraction</span>
+          <span className="text-[11px] text-[#7065E8] font-semibold">OCR Extraction Engine</span>
         </div>
 
         <textarea
@@ -183,7 +183,7 @@ Sub: Submission of Examination Forms & Regular End-Semester Fees for Odd Semeste
             disabled={isProcessing || !inputText.trim()}
             className="bg-[#7065E8] hover:bg-[#5E52E2] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all"
           >
-            {isProcessing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+            {isProcessing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
             <span>{isProcessing ? 'Extracting Intelligence...' : 'Extract Intelligence & Actions'}</span>
           </button>
         </div>

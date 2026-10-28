@@ -9,10 +9,10 @@ import {
   Trash2,
   CheckCircle,
   ExternalLink,
-  Sparkles,
   FileText,
   Calendar,
   Building,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 import { Notice } from '../types/student';
@@ -86,8 +86,8 @@ export const NoticesView: React.FC<NoticesViewProps> = ({ onNavigate }) => {
             onClick={() => onNavigate('/college/notice-intelligence')}
             className="bg-[#F0EEFF] hover:bg-[#E2DEFD] text-[#7065E8] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-colors"
           >
-            <Sparkles className="w-4 h-4" />
-            <span>AI Notice Intelligence</span>
+            <Zap className="w-4 h-4" />
+            <span>Notice Intelligence</span>
           </button>
           <button
             onClick={() => setShowAddModal(true)}
@@ -272,8 +272,8 @@ export const NoticesView: React.FC<NoticesViewProps> = ({ onNavigate }) => {
                   onClick={() => onNavigate('/college/notice-intelligence')}
                   className="w-full py-2.5 bg-[#7065E8] hover:bg-[#5E52E2] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Deep Analyze with Notice Intelligence & Create Task</span>
+                  <Zap className="w-4 h-4" />
+                  <span>Analyze with Notice Intelligence & Create Task</span>
                 </button>
               </div>
             </div>

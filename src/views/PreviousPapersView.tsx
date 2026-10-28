@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import {
   FileSearch,
   Upload,
-  Sparkles,
-  BarChart3,
+    BarChart3,
   BookOpen,
   CheckCircle2,
   AlertCircle,
@@ -259,14 +258,14 @@ export const PreviousPapersView: React.FC = () => {
 
         <div className="flex items-center justify-between pt-1">
           <span className="text-[11px] text-[#717487]">
-            Powered by Gemini 4 Argon • Historical frequency analysis
+            Mathematical frequency & paper weight calculation
           </span>
           <button
             onClick={handleRunAnalysis}
             disabled={isAnalyzing}
             className="bg-[#7065E8] hover:bg-[#5E52E2] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all"
           >
-            {isAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+            {isAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileSearch className="w-3.5 h-3.5" />}
             <span>{isAnalyzing ? 'Extracting & Mapping...' : 'Analyze Question Paper'}</span>
           </button>
         </div>

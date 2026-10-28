@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import {
   Mic,
   MicOff,
-  Sparkles,
-  CheckCircle2,
+    CheckCircle2,
   AlertCircle,
   HelpCircle,
   Award,
@@ -295,7 +294,7 @@ export const VivaView: React.FC = () => {
               disabled={isEvaluating || !studentAnswer.trim()}
               className="bg-[#7065E8] hover:bg-[#5E52E2] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
             >
-              {isEvaluating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+              {isEvaluating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Mic className="w-3.5 h-3.5" />}
               <span>{isEvaluating ? 'Examiner Evaluating...' : 'Submit Answer for Viva Evaluation'}</span>
             </button>
           </div>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard,
-  Sparkles,
+  Zap,
+  Command,
   BookOpen,
   CalendarDays,
   FileSearch,
@@ -80,16 +81,15 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           >
             <div className="w-9 h-9 rounded-xl bg-[#7065E8] text-white flex items-center justify-center shadow-sm relative group">
               <GraduationCap className="w-5 h-5" />
-              <Sparkles className="w-3 h-3 text-[#FFD166] absolute -top-1 -right-1 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-base text-[#171827] tracking-tight">VYUVIK</span>
                 <span className="text-[10px] uppercase tracking-wider font-bold bg-[#F0EEFF] text-[#7065E8] px-1.5 py-0.5 rounded-sm">
-                  Student
+                  OS
                 </span>
               </div>
-              <p className="text-[11px] text-[#717487] font-medium leading-none">Simplified by AI</p>
+              <p className="text-[11px] text-[#717487] font-medium leading-none">Sovereign Student OS</p>
             </div>
           </div>
           <button
@@ -117,10 +117,10 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             className={`w-full ${navItemClass('/assistant')}`}
           >
             <div className="relative">
-              <Sparkles className="w-4 h-4 text-[#7065E8]" />
+              <Command className="w-4 h-4 text-[#7065E8]" />
               <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#18856B]" />
             </div>
-            <span>AI Command Center</span>
+            <span>Student Command Center</span>
             <span className="ml-auto text-[10px] bg-[#EBE8FF] text-[#7065E8] font-bold px-1.5 py-0.2 rounded-full">
               Core
             </span>
@@ -198,7 +198,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   onClick={() => handleNav('/college/notice-intelligence')}
                   className={`w-full ${navItemClass('/college/notice-intelligence')}`}
                 >
-                  <Sparkles className="w-4 h-4 text-[#7065E8]" />
+                  <Zap className="w-4 h-4 text-[#7065E8]" />
                   <span>Notice Intelligence</span>
                 </button>
                 <button

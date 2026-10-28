@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import {
   FileText,
-  Sparkles,
-  CheckCircle2,
+    CheckCircle2,
   Download,
   Copy,
   Plus,

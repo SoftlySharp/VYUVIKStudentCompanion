@@ -3,8 +3,7 @@ import {
   Settings as SettingsIcon,
   User,
   ShieldCheck,
-  Sparkles,
-  Save,
+    Save,
   CheckCircle2,
   Trash2,
   Key,
@@ -171,8 +170,8 @@ export const SettingsView: React.FC = () => {
         {/* AI & Integration Diagnostics */}
         <div className="bg-white rounded-2xl border border-[#E8E8EF] p-6 shadow-2xs space-y-4">
           <h2 className="text-sm font-bold text-[#171827] uppercase tracking-wider flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#7065E8]" />
-            AI Architecture & Server Capabilities
+            <ShieldCheck className="w-4 h-4 text-[#7065E8]" />
+            System Architecture & Integration Diagnostics
           </h2>
 
           <div className="space-y-3 text-xs">

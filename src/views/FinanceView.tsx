@@ -3,7 +3,6 @@ import {
   Wallet,
   Plus,
   Upload,
-  Sparkles,
   Download,
   Trash2,
   TrendingDown,
@@ -13,6 +12,7 @@ import {
   Calendar,
   Layers,
   Loader2,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 import { calculateExpenseSummary, calculateDailyBurnRate } from '../utils/rules';
@@ -490,8 +490,8 @@ export const FinanceView: React.FC = () => {
           <div className="bg-white rounded-2xl border border-[#E8E8EF] max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-[#E8E8EF] pb-3">
               <h3 className="text-sm font-bold text-[#171827] flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#7065E8]" />
-                Scan Receipt with Gemini 4 Argon OCR
+                <Wallet className="w-4 h-4 text-[#7065E8]" />
+                Scan & Extract Expense Receipt
               </h3>
               <button onClick={() => setShowReceiptModal(false)} className="text-[#717487]">✕</button>
             </div>
@@ -507,7 +507,7 @@ export const FinanceView: React.FC = () => {
               disabled={isExtractingReceipt}
               className="w-full py-2 bg-[#7065E8] hover:bg-[#5E52E2] disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5"
             >
-              {isExtractingReceipt ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+              {isExtractingReceipt ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
               <span>{isExtractingReceipt ? 'Extracting Receipt...' : 'Extract Receipt Information'}</span>
             </button>
 

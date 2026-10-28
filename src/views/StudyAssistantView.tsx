@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import {
   BookMarked,
-  Sparkles,
-  Layers,
+    Layers,
   HelpCircle,
   RotateCcw,
   BookOpen,
@@ -137,7 +136,7 @@ export const StudyAssistantView: React.FC = () => {
                 disabled={isLoading || !question.trim()}
                 className="bg-[#7065E8] hover:bg-[#5E52E2] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
               >
-                {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <BookMarked className="w-3.5 h-3.5" />}
                 <span>{isLoading ? 'Researching notes...' : 'Ask Study Assistant'}</span>
               </button>
             </div>

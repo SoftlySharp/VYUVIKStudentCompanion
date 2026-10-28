@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import {
   GraduationCap,
-  Sparkles,
-  ArrowRight,
+    ArrowRight,
   CheckCircle2,
   BookOpen,
 } from 'lucide-react';

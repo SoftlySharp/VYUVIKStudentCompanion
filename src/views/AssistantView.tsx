@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Sparkles,
   Send,
   Paperclip,
   Mic,
@@ -10,6 +9,7 @@ import {
   CheckCircle,
   XCircle,
   Zap,
+  Command,
   Brain,
   FileText,
   Calendar,
@@ -232,11 +232,11 @@ export const AssistantView: React.FC = () => {
       <div className="p-4 border-b border-[#E8E8EF] bg-[#FAFAFC] flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#7065E8] text-white flex items-center justify-center shadow-xs">
-            <Sparkles className="w-5 h-5" />
+            <Command className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-[#171827]">AI Student Command Center</h2>
+              <h2 className="text-sm font-bold text-[#171827]">Student Command Center</h2>
               <span className="text-[10px] bg-[#EAF7F3] text-[#18856B] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#18856B]" />
                 Live Context
@@ -316,7 +316,7 @@ export const AssistantView: React.FC = () => {
                 {msg.proposedAction && (
                   <div className="mt-3 p-3.5 rounded-xl bg-white border border-[#7065E8]/30 shadow-xs text-left">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#7065E8] mb-1">
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <Zap className="w-3.5 h-3.5" />
                       <span>Proposed Action: {msg.proposedAction.title}</span>
                     </div>
                     <p className="text-xs text-[#53566B] mb-3">{msg.proposedAction.details}</p>

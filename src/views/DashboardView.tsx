@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Sparkles,
   ArrowRight,
   BookOpen,
   Calendar,
@@ -14,6 +13,7 @@ import {
   Briefcase,
   ChevronRight,
   Plus,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 import { calculateAttendance, calculateExpenseSummary } from '../utils/rules';
@@ -87,10 +87,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         <div className="relative z-10 max-w-3xl">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
+              <Zap className="w-3.5 h-3.5 text-white" />
             </span>
             <span className="text-xs font-semibold tracking-wide uppercase text-white/90">
-              VYUVIK AI Intelligence Hub
+              VYUVIK Student Intelligence Radar
             </span>
           </div>
 

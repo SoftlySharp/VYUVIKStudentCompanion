@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   GraduationCap,
-  Sparkles,
   ArrowRight,
   Mail,
   Lock,
@@ -10,6 +9,7 @@ import {
   CheckCircle2,
   AlertCircle,
   RefreshCw,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 
@@ -79,10 +79,9 @@ export const AuthView: React.FC<AuthViewProps> = ({
         <div className="text-center space-y-2">
           <div className="w-12 h-12 bg-[#7065E8] text-white rounded-2xl flex items-center justify-center mx-auto shadow-sm relative">
             <GraduationCap className="w-6 h-6" />
-            <Sparkles className="w-3.5 h-3.5 text-[#FFD166] absolute -top-1 -right-1" />
           </div>
           <h1 className="text-xl font-extrabold text-[#171827]">VYUVIK Student Companion</h1>
-          <p className="text-xs text-[#717487]">Your College Life, Simplified by AI</p>
+          <p className="text-xs text-[#717487]">Your Sovereign Academic Operating System</p>
         </div>
 
         {/* Auth Mode Tabs */}
@@ -131,7 +130,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
           disabled={isSubmitting}
           className="w-full py-2.5 bg-[#F0EEFF] hover:bg-[#E2DEFD] text-[#7065E8] border border-[#D9D4FA] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-2xs"
         >
-          <Sparkles className="w-4 h-4" />
+          <Zap className="w-4 h-4" />
           <span>Continue as Demo Student (Khushi - SAREC Mirzapur)</span>
         </button>
 

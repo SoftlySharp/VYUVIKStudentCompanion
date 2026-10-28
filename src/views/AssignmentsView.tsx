@@ -3,7 +3,6 @@ import {
   BookOpen,
   Plus,
   Upload,
-  Sparkles,
   Calendar,
   Clock,
   CheckCircle2,
@@ -15,6 +14,7 @@ import {
   ChevronRight,
   FileText,
   Loader2,
+  Zap,
 } from 'lucide-react';
 import { useStudent } from '../context/StudentContext';
 import { Assignment } from '../types/student';
@@ -441,8 +441,8 @@ export const AssignmentsView: React.FC = () => {
           <div className="bg-white rounded-2xl border border-[#E8E8EF] max-w-xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-[#E8E8EF] pb-3">
               <h3 className="text-base font-bold text-[#171827] flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#7065E8]" />
-                Add Assignment via AI Extraction or Manual Form
+                <BookOpen className="w-5 h-5 text-[#7065E8]" />
+                Add Assignment & Extract Rubric Checklist
               </h3>
               <button
                 onClick={() => setShowAddModal(false)}
@@ -458,7 +458,7 @@ export const AssignmentsView: React.FC = () => {
                 <span className="text-xs font-bold text-[#7065E8]">
                   Paste Assignment Prompt or Syllabus Guidelines:
                 </span>
-                <span className="text-[10px] text-[#717487]">Gemini 4 Argon OCR</span>
+                <span className="text-[10px] text-[#717487]">Smart Extraction Engine</span>
               </div>
               <textarea
                 value={instructionText}
@@ -473,8 +473,8 @@ export const AssignmentsView: React.FC = () => {
                 disabled={isExtracting || !instructionText.trim()}
                 className="bg-[#7065E8] hover:bg-[#5E52E2] disabled:opacity-50 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all"
               >
-                {isExtracting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                <span>{isExtracting ? 'Analyzing with Gemini...' : 'Extract Title, Rubric & Checklist'}</span>
+                {isExtracting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                <span>{isExtracting ? 'Analyzing prompt...' : 'Extract Title, Rubric & Checklist'}</span>
               </button>
             </div>
 

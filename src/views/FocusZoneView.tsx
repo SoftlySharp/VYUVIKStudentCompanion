@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Compass, Play, RotateCcw, Volume2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Compass, Play, RotateCcw, Volume2, ShieldCheck } from 'lucide-react';
 
 export const FocusZoneView: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -253,7 +253,7 @@ export const FocusZoneView: React.FC = () => {
           <div className="absolute inset-0 bg-white/40 backdrop-blur-xs flex items-center justify-center pointer-events-auto">
             <div className="bg-white p-6 rounded-3xl border border-[#E8E8EF] shadow-2xl max-w-sm text-center space-y-3">
               <div className="w-12 h-12 bg-[#F0EEFF] text-[#7065E8] rounded-2xl flex items-center justify-center mx-auto">
-                <Sparkles className="w-6 h-6" />
+                <Compass className="w-6 h-6" />
               </div>
               <h3 className="text-base font-bold text-[#171827]">Mindful Study Break</h3>
               <p className="text-xs text-[#717487] leading-relaxed">

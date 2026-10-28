@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react';
 import {
   Upload,
   FileText,
-  Sparkles,
-  CheckCircle2,
+    CheckCircle2,
   AlertTriangle,
   X,
   ArrowRight,
@@ -390,7 +389,7 @@ export const SharedDocumentProcessor: React.FC<SharedDocumentProcessorProps> = (
             <div className="py-12 px-6 flex flex-col items-center justify-center text-center space-y-4">
               <div className="relative">
                 <div className="w-16 h-16 rounded-3xl bg-[#F0EEFF] text-[#7065E8] flex items-center justify-center animate-pulse">
-                  <Sparkles className="w-8 h-8" />
+                  <Layers className="w-8 h-8" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white border border-[#E8E8EF] flex items-center justify-center">
                   <Loader2 className="w-3.5 h-3.5 text-[#7065E8] animate-spin" />
@@ -398,7 +397,7 @@ export const SharedDocumentProcessor: React.FC<SharedDocumentProcessorProps> = (
               </div>
               <div>
                 <h4 className="text-sm font-bold text-[#171827]">
-                  {stage === 'uploading' ? 'Vault Storage Ingestion' : 'Multimodal AI Extraction'}
+                  {stage === 'uploading' ? 'Vault Storage Ingestion' : 'Document Processing & OCR Extraction'}
                 </h4>
                 <p className="text-xs text-[#717487] mt-1 max-w-sm">
                   {processingStatusText}
@@ -657,8 +656,8 @@ export const SharedDocumentProcessor: React.FC<SharedDocumentProcessorProps> = (
               onClick={handleStartProcessing}
               className="bg-[#7065E8] hover:bg-[#5E52E2] text-white px-5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-xs transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Process with Gemini OCR</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span>Process & Extract Document</span>
             </button>
           ) : stage === 'review' ? (
             <button

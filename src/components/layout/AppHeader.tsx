@@ -3,8 +3,7 @@ import {
   Search,
   Bell,
   Menu,
-  Sparkles,
-  Plus,
+    Plus,
   CheckCircle2,
   RefreshCw,
   ExternalLink,
@@ -59,10 +58,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           />
           <button
             type="submit"
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold bg-[#F0EEFF] text-[#7065E8] hover:bg-[#E3E0FE] px-2 py-1 rounded-lg flex items-center gap-1 transition-colors"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold bg-[#F0EEFF] text-[#7065E8] hover:bg-[#E3E0FE] px-2.5 py-1 rounded-lg flex items-center gap-1 transition-colors"
           >
-            <Sparkles className="w-3 h-3" />
-            <span>Ask</span>
+            <Search className="w-3 h-3" />
+            <span>Search</span>
           </button>
         </form>
       </div>
