@@ -53,7 +53,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search assignments, notices, documents, or ask AI..."
+            placeholder="Search assignments, notices..."
             className="w-full pl-9 pr-20 py-2 rounded-xl bg-[#FAFAFC] border border-[#E8E8EF] text-xs focus:outline-hidden focus:border-[#7065E8] focus:bg-white transition-all text-[#171827] placeholder:text-[#8C8FA3]"
           />
           <button

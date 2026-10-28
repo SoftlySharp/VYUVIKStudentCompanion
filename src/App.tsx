@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StudentProvider, useStudent } from './context/StudentContext';
 import { AppSidebar } from './components/layout/AppSidebar';
 import { AppHeader } from './components/layout/AppHeader';
+import { CursorBackgroundEffect } from './components/common/CursorBackgroundEffect';
 
 // Views
 import { DashboardView } from './views/DashboardView';
@@ -115,7 +116,7 @@ const MainLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFC] text-[#171827] flex">
+    <div className="min-h-screen bg-[#FAFAFC] text-[#171827] flex relative">
       {/* Persistent Left Sidebar */}
       <AppSidebar
         currentRoute={currentRoute}
@@ -141,6 +142,7 @@ const MainLayout: React.FC = () => {
 export default function App() {
   return (
     <StudentProvider>
+      <CursorBackgroundEffect />
       <MainLayout />
     </StudentProvider>
   );

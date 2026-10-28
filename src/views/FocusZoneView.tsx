@@ -234,20 +234,50 @@ export const FocusZoneView: React.FC = () => {
       </div>
 
       {/* 3D WebGL Canvas Container */}
-      <div className="relative w-full h-[520px] bg-white rounded-3xl border border-[#E8E8EF] shadow-md overflow-hidden">
+      <div className="relative w-full h-[360px] sm:h-[520px] bg-white rounded-3xl border border-[#E8E8EF] shadow-md overflow-hidden">
         <div ref={mountRef} className="w-full h-full" />
 
         {/* HUD Overlay */}
-        <div className="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#E8E8EF] text-xs pointer-events-none">
-          <p className="font-bold text-[#171827]">SAREC Mirzapur Campus Knowledge Pavilion</p>
-          <p className="text-[10px] text-[#717487]">Procedural PBR Lighting • ACES Tone Mapping</p>
+        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 bg-white/80 backdrop-blur-md p-2.5 sm:px-3.5 sm:py-2 rounded-xl border border-[#E8E8EF] text-[11px] sm:text-xs pointer-events-none">
+          <p className="font-bold text-[#171827]">SAREC Mirzapur Campus Pavilion</p>
+          <p className="text-[9px] sm:text-[10px] text-[#717487]">Procedural PBR Lighting • ACES Tone Mapping</p>
         </div>
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#E8E8EF] text-xs text-[#53566B] font-medium flex items-center gap-4 shadow-sm">
-          <span>Controls: <strong className="text-[#171827]">A / D or ← →</strong> Rotate Pavilion</span>
+        {/* Desktop Controls Indicator */}
+        <div className="hidden sm:flex absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#E8E8EF] text-xs text-[#53566B] font-medium items-center gap-4 shadow-sm">
+          <span>Controls: <strong className="text-[#171827]">A / D or ← →</strong> Rotate</span>
           <span>•</span>
           <span><strong className="text-[#171827]">Space</strong> Collect Focus Sparks (+10 XP)</span>
         </div>
+
+        {/* Mobile On-Screen Touch Controls */}
+        {gameState === 'playing' && (
+          <div className="sm:hidden absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }))}
+              className="bg-white/90 backdrop-blur-md text-[#171827] active:bg-[#7065E8] active:text-white px-3 py-2 rounded-xl border border-[#E8E8EF] text-xs font-bold shadow-md"
+            >
+              ↺ Rotate Left
+            </button>
+
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }))}
+              className="bg-[#7065E8] text-white active:bg-[#5E52E2] px-4 py-2 rounded-xl text-xs font-bold shadow-md"
+            >
+              ✨ Collect (+10 XP)
+            </button>
+
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))}
+              className="bg-white/90 backdrop-blur-md text-[#171827] active:bg-[#7065E8] active:text-white px-3 py-2 rounded-xl border border-[#E8E8EF] text-xs font-bold shadow-md"
+            >
+              Rotate Right ↻
+            </button>
+          </div>
+        )}
 
         {gameState === 'title' && (
           <div className="absolute inset-0 bg-white/40 backdrop-blur-xs flex items-center justify-center pointer-events-auto">

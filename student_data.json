@@ -1,0 +1,482 @@
+{
+  "profile": {
+    "name": "Aarav Sharma",
+    "email": "aarav.sharma@college.edu.in",
+    "college": "Delhi Technological University (DTU)",
+    "degree": "B.Tech",
+    "branch": "Computer Science & Engineering",
+    "semester": "Semester 5",
+    "rollNumber": "2K23/CO/142",
+    "academicGoals": "Maintain >8.5 CGPA, secure Product Intern role, complete Capstone project",
+    "preferredStudyHours": "6:00 PM - 10:30 PM",
+    "timeZone": "Asia/Kolkata (IST)",
+    "isOnboarded": true
+  },
+  "assignments": [
+    {
+      "id": "asg-1",
+      "title": "Distributed Consensus & Raft Protocol Implementation",
+      "subject": "Distributed Systems",
+      "dueDate": "2026-11-02",
+      "explicitDeadline": "Nov 02, 2026 at 11:59 PM",
+      "isDeadlineAmbiguous": false,
+      "wordLimit": "12-page IEEE Technical Report",
+      "formatting": "IEEE standard double-column 10pt font, PDF submission",
+      "rubric": [
+        "Leader Election (30%)",
+        "Log Replication (30%)",
+        "Safety & Heartbeats (20%)",
+        "Documentation (20%)"
+      ],
+      "deliverables": [
+        "raft_node.go",
+        "Simulation Log outputs",
+        "Technical Evaluation PDF"
+      ],
+      "checklist": [
+        {
+          "id": "c1",
+          "text": "Implement randomized heartbeat timers",
+          "completed": true
+        },
+        {
+          "id": "c2",
+          "text": "Handle candidate state and vote request RPCs",
+          "completed": true
+        },
+        {
+          "id": "c3",
+          "text": "Implement AppendEntries log matching and commit index",
+          "completed": false
+        },
+        {
+          "id": "c4",
+          "text": "Benchmark network partition tolerance in local cluster",
+          "completed": false
+        }
+      ],
+      "priority": "high",
+      "progress": 50,
+      "status": "in-progress",
+      "createdAt": "2026-10-24"
+    },
+    {
+      "id": "asg-2",
+      "title": "TCP Flow Control & Sliding Window Network Simulator",
+      "subject": "Computer Networks",
+      "dueDate": "2026-11-06",
+      "explicitDeadline": "Nov 06, 2026 at 5:00 PM",
+      "isDeadlineAmbiguous": false,
+      "wordLimit": "Code with readme & test metrics",
+      "formatting": "Python 3.12 / C++ with terminal graph output",
+      "rubric": [
+        "Go-Back-N implementation (40%)",
+        "Selective Repeat (40%)",
+        "Packet loss simulation (20%)"
+      ],
+      "deliverables": [
+        "simulator.py",
+        "packet_loss_plots.png",
+        "README.md"
+      ],
+      "checklist": [
+        {
+          "id": "c5",
+          "text": "Set up socket abstraction with artificial drop rate",
+          "completed": true
+        },
+        {
+          "id": "c6",
+          "text": "Calculate retransmission timeouts using Jacobson algorithm",
+          "completed": true
+        },
+        {
+          "id": "c7",
+          "text": "Plot throughput vs packet loss percentage",
+          "completed": true
+        }
+      ],
+      "priority": "medium",
+      "progress": 100,
+      "status": "completed",
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "asg-3",
+      "title": "B+ Tree Indexing Engine & Query Optimization",
+      "subject": "Database Systems",
+      "dueDate": "2026-11-12",
+      "explicitDeadline": "Nov 12, 2026 at 11:59 PM",
+      "isDeadlineAmbiguous": false,
+      "wordLimit": "Source code & benchmark report",
+      "formatting": "Markdown report with execution plan diagrams",
+      "rubric": [
+        "Node splitting & merging (50%)",
+        "Range scan performance (30%)",
+        "Concurrency latches (20%)"
+      ],
+      "deliverables": [
+        "b_plus_tree.cpp",
+        "benchmark_results.csv",
+        "report.pdf"
+      ],
+      "checklist": [
+        {
+          "id": "c8",
+          "text": "Define internal node and leaf node memory layouts",
+          "completed": true
+        },
+        {
+          "id": "c9",
+          "text": "Implement key insertion with node split cascading",
+          "completed": false
+        },
+        {
+          "id": "c10",
+          "text": "Implement range iterator for point queries",
+          "completed": false
+        }
+      ],
+      "priority": "high",
+      "progress": 30,
+      "status": "pending",
+      "createdAt": "2026-10-26"
+    }
+  ],
+  "notices": [
+    {
+      "id": "not-1",
+      "title": "End-Semester Theory & Practical Examination Schedule (Nov-Dec 2026)",
+      "issuingAuthority": "Controller of Examinations",
+      "publicationDate": "26 Oct 2026",
+      "deadline": "08 Nov 2026, 5:00 PM",
+      "category": "Examinations",
+      "summary": "Regular semester examinations commence from Nov 20. Hall tickets will be issued only to candidates having minimum 75% attendance.",
+      "actionRequired": "Verify attendance status on ERP portal and submit examination form with fee receipt before Nov 8.",
+      "checklist": [
+        "Check subject codes",
+        "Pay ₹1,800 exam fee",
+        "Submit printout to academic section"
+      ],
+      "isPinned": true,
+      "isRead": false,
+      "sourceType": "Official Bulletin"
+    },
+    {
+      "id": "not-2",
+      "title": "Winter Research Internship Applications Open — AI & Robotics Lab",
+      "issuingAuthority": "Department of Computer Science",
+      "publicationDate": "25 Oct 2026",
+      "deadline": "05 Nov 2026",
+      "category": "Internships",
+      "summary": "Stipend of ₹25,000/month for undergraduate students to work on LLM multi-agent reasoning and procedural generation.",
+      "actionRequired": "Upload updated resume and 1-page statement of purpose on the departmental portal.",
+      "checklist": [
+        "Update Resume",
+        "Draft SOP highlighting ML coursework",
+        "Submit GitHub profile link"
+      ],
+      "isPinned": true,
+      "isRead": true,
+      "sourceType": "Uploaded Circular"
+    },
+    {
+      "id": "not-3",
+      "title": "Merit-Cum-Means Scholarship Renewal Notice for Academic Year 2026-27",
+      "issuingAuthority": "Dean of Student Welfare (DSW)",
+      "publicationDate": "22 Oct 2026",
+      "deadline": "15 Nov 2026",
+      "category": "Scholarships",
+      "summary": "Eligible students with family annual income under ₹6,00,000 and CGPA above 7.5 can apply for 100% tuition fee waiver renewal.",
+      "actionRequired": "Attach previous semester marksheets, family income certificate, and bank account passbook copy.",
+      "checklist": [
+        "Download Annexure A",
+        "Get income certificate countersigned by Tehsildar",
+        "Submit to DSW window 4"
+      ],
+      "isPinned": false,
+      "isRead": true,
+      "sourceType": "Official Bulletin"
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc-1",
+      "title": "Semester 4 Grade Sheet (DTU/CO/2026/S4)",
+      "category": "marksheet",
+      "uploadDate": "2026-09-10",
+      "fileSize": "412 KB",
+      "fileType": "PDF",
+      "extractedMeta": {
+        "SGPA": "8.84",
+        "CGPA": "8.62",
+        "TotalCredits": "24",
+        "Status": "Passed First Class"
+      },
+      "isVerified": true
+    },
+    {
+      "id": "doc-2",
+      "title": "Official College Identity Card",
+      "category": "identity",
+      "uploadDate": "2026-08-01",
+      "fileSize": "1.2 MB",
+      "fileType": "PDF",
+      "extractedMeta": {
+        "StudentName": "Aarav Sharma",
+        "RollNumber": "2K23/CO/142",
+        "ValidTill": "June 2027",
+        "BloodGroup": "O+"
+      },
+      "isVerified": true
+    },
+    {
+      "id": "doc-3",
+      "title": "Aarav_Sharma_SDE_Resume_2026.pdf",
+      "category": "resume",
+      "uploadDate": "2026-10-15",
+      "fileSize": "185 KB",
+      "fileType": "PDF",
+      "extractedMeta": {
+        "Stack": "React, Node.js, Go, Python, PostgreSQL",
+        "Experience": "Prev Intern @ TechCorp"
+      },
+      "isVerified": true
+    },
+    {
+      "id": "doc-4",
+      "title": "Odd Semester 2026-27 Fee Payment Receipt",
+      "category": "fee_receipt",
+      "uploadDate": "2026-08-14",
+      "fileSize": "320 KB",
+      "fileType": "PDF",
+      "extractedMeta": {
+        "AmountPaid": "₹ 86,500",
+        "TransactionID": "SBI2026081498124",
+        "Semester": "5th"
+      },
+      "isVerified": true
+    }
+  ],
+  "internships": [
+    {
+      "id": "int-1",
+      "company": "Razorpay",
+      "role": "Frontend Engineering Intern",
+      "location": "Bengaluru / Hybrid",
+      "stipend": "₹ 50,000 / month",
+      "deadline": "2026-11-10",
+      "status": "preparing",
+      "matchScore": 88,
+      "matchingSkills": [
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "State Management",
+        "Web Performance"
+      ],
+      "missingSkills": [
+        "Next.js SSR",
+        "Testing with Playwright"
+      ],
+      "notes": "Referral submitted by college senior. Coding test expected next week."
+    },
+    {
+      "id": "int-2",
+      "company": "CRED",
+      "role": "Backend Systems Intern",
+      "location": "Bengaluru",
+      "stipend": "₹ 65,000 / month",
+      "deadline": "2026-11-18",
+      "status": "interested",
+      "matchScore": 82,
+      "matchingSkills": [
+        "Go / Node.js",
+        "Distributed Systems",
+        "PostgreSQL",
+        "RESTful APIs"
+      ],
+      "missingSkills": [
+        "Kafka",
+        "Redis Sentinel"
+      ],
+      "notes": "Highlight Raft consensus assignment in project portfolio."
+    },
+    {
+      "id": "int-3",
+      "company": "Zomato",
+      "role": "Full Stack Development Intern",
+      "location": "Gurugram / Onsite",
+      "stipend": "₹ 45,000 / month",
+      "deadline": "2026-10-30",
+      "status": "applied",
+      "matchScore": 91,
+      "matchingSkills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "System Design Basics"
+      ],
+      "missingSkills": [
+        "ElasticSearch"
+      ],
+      "notes": "Application submitted on campus placement portal."
+    }
+  ],
+  "expenses": [
+    {
+      "id": "exp-1793193530892",
+      "title": "Photocopy & Assignment Binding",
+      "amount": 250,
+      "category": "Printing",
+      "date": "2026-10-28"
+    },
+    {
+      "id": "exp-1",
+      "title": "DTU Canteen Lunch (Thali + Chai)",
+      "amount": 120,
+      "category": "Food",
+      "date": "2026-10-27",
+      "merchant": "Central Canteen"
+    },
+    {
+      "id": "exp-2",
+      "title": "Lab Record Binding & Printing",
+      "amount": 160,
+      "category": "Printing",
+      "date": "2026-10-26",
+      "merchant": "Micron Xerox"
+    },
+    {
+      "id": "exp-3",
+      "title": "Delhi Metro Smart Card Recharge",
+      "amount": 500,
+      "category": "Transport",
+      "date": "2026-10-25",
+      "merchant": "DMRC Samaypur Badli"
+    },
+    {
+      "id": "exp-4",
+      "title": "Algorithms Textbook Reference Book",
+      "amount": 480,
+      "category": "Education",
+      "date": "2026-10-22",
+      "merchant": "Nai Sarak Books"
+    },
+    {
+      "id": "exp-5",
+      "title": "Hostel Wi-Fi Monthly Share",
+      "amount": 350,
+      "category": "Hostel and Rent",
+      "date": "2026-10-20",
+      "merchant": "Broadband Provider"
+    }
+  ],
+  "attendanceList": [
+    {
+      "id": "att-1",
+      "name": "Distributed Systems",
+      "code": "CO301",
+      "conducted": 36,
+      "attended": 31,
+      "targetPercent": 75
+    },
+    {
+      "id": "att-2",
+      "name": "Computer Networks",
+      "code": "CO303",
+      "conducted": 38,
+      "attended": 26,
+      "targetPercent": 75
+    },
+    {
+      "id": "att-3",
+      "name": "Database Management Systems",
+      "code": "CO305",
+      "conducted": 34,
+      "attended": 29,
+      "targetPercent": 75
+    },
+    {
+      "id": "att-4",
+      "name": "Theory of Computation",
+      "code": "CO307",
+      "conducted": 32,
+      "attended": 28,
+      "targetPercent": 75
+    },
+    {
+      "id": "att-5",
+      "name": "Software Engineering Lab",
+      "code": "CO309",
+      "conducted": 14,
+      "attended": 13,
+      "targetPercent": 75
+    }
+  ],
+  "studyBlocks": [
+    {
+      "id": "sb-1",
+      "title": "Raft Protocol Log Replication Coding",
+      "subject": "Distributed Systems",
+      "startTime": "6:00 PM",
+      "endTime": "7:30 PM",
+      "durationMinutes": 90,
+      "priority": "high",
+      "completed": false,
+      "day": "Today"
+    },
+    {
+      "id": "sb-2",
+      "title": "TCP Sliding Window Analysis & Jacobson Formula",
+      "subject": "Computer Networks",
+      "startTime": "7:40 PM",
+      "endTime": "8:40 PM",
+      "durationMinutes": 60,
+      "priority": "medium",
+      "completed": false,
+      "day": "Today"
+    },
+    {
+      "id": "sb-3",
+      "title": "B+ Tree Node Deletion & Merging Proofs",
+      "subject": "Database Systems",
+      "startTime": "9:00 PM",
+      "endTime": "10:15 PM",
+      "durationMinutes": 75,
+      "priority": "high",
+      "completed": false,
+      "day": "Today"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "n-1",
+      "title": "Upcoming Deadline Warning",
+      "message": "Distributed Systems Raft assignment is due in 5 days (Nov 02).",
+      "type": "deadline",
+      "time": "1 hour ago",
+      "read": false,
+      "linkRoute": "/academics/assignments"
+    },
+    {
+      "id": "n-2",
+      "title": "Attendance Alert: Computer Networks",
+      "message": "Current attendance is 68.4% (below 75%). Attend next 8 classes to avoid detention.",
+      "type": "attendance",
+      "time": "3 hours ago",
+      "read": false,
+      "linkRoute": "/attendance"
+    },
+    {
+      "id": "n-3",
+      "title": "New Notice Published",
+      "message": "End-Semester examination schedule released by Controller of Examinations.",
+      "type": "notice",
+      "time": "1 day ago",
+      "read": true,
+      "linkRoute": "/college/notices"
+    }
+  ],
+  "updatedAt": "2026-10-28T16:44:01.689Z"
+}
